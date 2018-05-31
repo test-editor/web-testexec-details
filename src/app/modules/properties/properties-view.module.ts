@@ -6,6 +6,7 @@ import { PropertiesViewComponent } from './properties-view.component';
   imports: [
     CommonModule
   ],
-  declarations: [PropertiesViewComponent]
+  declarations: [PropertiesViewComponent],
+  exports: [PropertiesViewComponent]
 })
 export class PropertiesViewModule { }

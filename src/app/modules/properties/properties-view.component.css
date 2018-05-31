@@ -1,0 +1,21 @@
+dl {
+    padding: 0.5em;
+  }
+dt {
+    float: left;
+    clear: left;
+    width: 20%;
+    font-weight: bold;
+}
+dt::after {
+    content: ":";
+}
+dd {
+    margin: 0 0 0 25%;
+    padding: 0 0 0.5em 0;
+}
+
+p.error {
+    color: red;
+    font-weight: bold
+}

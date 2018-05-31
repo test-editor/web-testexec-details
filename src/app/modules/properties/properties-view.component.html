@@ -1,3 +1,10 @@
-<p>
-  properties-view works!
-</p>
+<div *ngIf="isModelValid() else modelInvalidBlock">
+<dl *ngIf="propertyNames().length > 0">
+  <div *ngFor="let propertyName of propertyNames()">
+    <dt>{{propertyName}}</dt><dd>{{propertyValue(propertyName)}}</dd>
+  </div>
+</dl>
+</div>
+<ng-template #modelInvalidBlock>
+  <p class="error">Cannot display data of unexpected type: {{typeOfModel()}}</p>
+</ng-template>
