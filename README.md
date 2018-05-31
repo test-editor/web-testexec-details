@@ -1,5 +1,13 @@
 # web-testexec-details
 
+[![NPM version][npm-image]][npm-url]
+[![Build Status][travis-image]][travis-url]
+
+[npm-image]: https://badge.fury.io/js/%40testeditor%2Ftestexec-details.svg
+[npm-url]: https://www.npmjs.com/package/@testeditor/testexec-details
+[travis-image]: https://travis-ci.org/test-editor/web-testexec-details.svg?branch=master
+[travis-url]: https://travis-ci.org/test-editor/web-testexec-details
+
 Test-Editor test execution details gui angular component
 
 # TestExecDetails
