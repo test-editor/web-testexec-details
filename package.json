@@ -1,7 +1,7 @@
 {
   "name": "@testeditor/testexec-details",
   "version": "0.1.0",
-  "description": "Angular component for the navigation of test execution call hierarchies.",
+  "description": "Angular component providing a detailed view on test execution steps within test execution call hierarchies",
   "license": "EPL",
   "keywords": [
     "test-editor",

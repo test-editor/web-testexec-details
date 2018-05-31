@@ -36,6 +36,9 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     files: [ 'src/**/*.ts', 'src/**/*.css', 'src/**/*.html' ],
     autoWatch: true,
+    watchOptions: {
+      ignored: /node_modules/
+    },
     browsers: [ 'Chrome', 'Firefox' ],
     singleRun: false
   });

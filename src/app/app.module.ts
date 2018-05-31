@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { TestExecDetailsModule } from './modules/details/test-exec-details.module';
-
+import { MessagingModule } from '@testeditor/messaging-service';
 
 @NgModule({
   declarations: [
@@ -12,7 +12,8 @@ import { TestExecDetailsModule } from './modules/details/test-exec-details.modul
   ],
   imports: [
     BrowserModule,
-    TestExecDetailsModule
+    TestExecDetailsModule,
+    MessagingModule.forRoot(),
   ],
   providers: [
   ],
