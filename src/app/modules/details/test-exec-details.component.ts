@@ -7,6 +7,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TestExecDetailsComponent implements OnInit {
 
+// random, temporary data for demonstration purposes
+private readonly properties = {
+  'Type': 'Test Step',
+  'Execution Time': '4.2 seconds',
+  'Status': 'OK'
+};
+
   constructor() { }
 
   ngOnInit() {
