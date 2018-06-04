@@ -3,6 +3,8 @@ import { AppComponent } from './app.component';
 import { TestExecDetailsComponent } from './modules/details/test-exec-details.component';
 import { PropertiesViewComponent } from './modules/properties/properties-view.component';
 import { By } from '@angular/platform-browser';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -11,6 +13,7 @@ describe('AppComponent', () => {
         TestExecDetailsComponent,
         PropertiesViewComponent
       ],
+      imports: [ TabsModule.forRoot() ]
     }).compileComponents();
   }));
 
