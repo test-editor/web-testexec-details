@@ -1,22 +1,43 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MessagingService } from '@testeditor/messaging-service';
+import { ISubscription, Subscription } from 'rxjs/Subscription';
+import { Subject } from 'rxjs/Subject';
+import { TEST_NAVIGATION_SELECT } from './event-types';
+import { TestExecutionDetailsService } from '../test-execution-details/test-execution-details.service';
 
 @Component({
   selector: 'app-test-exec-details',
   templateUrl: './test-exec-details.component.html',
   styleUrls: ['./test-exec-details.component.css']
 })
-export class TestExecDetailsComponent implements OnInit {
+export class TestExecDetailsComponent implements OnInit, OnDestroy {
 
-// random, temporary data for demonstration purposes
-private readonly properties = {
-  'Type': 'Test Step',
-  'Execution Time': '4.2 seconds',
-  'Status': 'OK'
-};
+  // random, temporary data for demonstration purposes
+  private readonly properties = {
+    'Type': 'Test Step',
+    'Execution Time': '4.2 seconds',
+    'Status': 'OK'
+  };
 
-  constructor() { }
+  private subscription: Subscription;
+
+  constructor(private messagingService: MessagingService, private detailsService: TestExecutionDetailsService) { }
 
   ngOnInit() {
+    this.subscription = this.messagingService.subscribe(TEST_NAVIGATION_SELECT, (id) => this.updateDetails(id));
+    // use this.subscription.add(…) to add additional subscriptions;
+    // that way, all subscriptions will be cancelled when this component is destroyed.
+    // See http://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  updateDetails(id: number): any {
+    this.detailsService.getTestExecutionDetails(id, () => { /*TODO: update! */}, () => { /*TODO: handle errors!*/});
   }
 
 }
