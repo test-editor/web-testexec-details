@@ -4358,6 +4358,10 @@ ng-packagr@^2.4.2:
     uglify-js "^3.3.20"
     update-notifier "^2.3.0"
 
+ngx-bootstrap@^2.0.4:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-2.0.5.tgz#83aab39d1e4fe811fad2b34f7927f9ce19d68daa"
+
 no-case@^2.2.0:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/no-case/-/no-case-2.3.2.tgz#60b813396be39b3f1288a4c1ed5d1e7d28b464ac"
