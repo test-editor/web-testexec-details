@@ -3,7 +3,7 @@ import { MessagingService } from '@testeditor/messaging-service';
 import { ISubscription, Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import { TEST_NAVIGATION_SELECT } from './event-types';
-import { TestExecutionDetailsService, TestRunID } from '../details-service/test-execution-details.service';
+import { TestExecutionDetailsService, TestRunID, TestExecutionDetails, DataKind } from '../details-service/test-execution-details.service';
 
 @Component({
   selector: 'app-test-exec-details',
@@ -12,12 +12,13 @@ import { TestExecutionDetailsService, TestRunID } from '../details-service/test-
 })
 export class TestExecDetailsComponent implements OnInit, OnDestroy {
 
-  // random, temporary data for demonstration purposes
-  private readonly properties = {
+  private properties = {
     'Type': 'Test Step',
     'Execution Time': '4.2 seconds',
     'Status': 'OK'
   };
+  private screenshotURL = '';
+  private rawLog = '';
 
   private subscription: Subscription;
 
@@ -37,7 +38,17 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
   }
 
   updateDetails(id: TestRunID): any {
-    this.detailsService.getTestExecutionDetails(id, () => { /*TODO: update! */}, () => { /*TODO: handle errors!*/});
+    this.detailsService.getTestExecutionDetails(id,
+      (details: TestExecutionDetails[]) => {
+        details.forEach((entry) => {
+          switch (entry.type) {
+            case DataKind.image: this.screenshotURL = entry.content; break;
+            case DataKind.properties: this.properties = entry.content; break;
+            case DataKind.text: this.rawLog = entry.content; break;
+          }
+        });
+      },
+      () => { /*TODO: handle errors!*/});
   }
 
 }
