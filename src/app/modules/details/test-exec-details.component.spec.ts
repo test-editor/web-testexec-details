@@ -5,7 +5,7 @@ import { PropertiesViewComponent } from '../properties/properties-view.component
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { MessagingModule, MessagingService } from '@testeditor/messaging-service';
 import { TEST_NAVIGATION_SELECT } from './event-types';
-import { TestExecutionDetailsService, DefaultTestExecutionDetailsService } from '../test-execution-details/test-execution-details.service';
+import { TestExecutionDetailsService, DefaultTestExecutionDetailsService, TestRunID } from '../details-service/test-execution-details.service';
 import { mock, instance, anything, verify, when } from 'ts-mockito';
 
 describe('TestExecDetailsComponent', () => {
@@ -38,7 +38,7 @@ describe('TestExecDetailsComponent', () => {
 
   it('updates details on receiving TEST_NAVIGATION_SELECT event', () => {
     // given
-    const selectionID = 4711;
+    const selectionID: TestRunID = {testSuiteID: 42, testSuiteRunID: 1, testRunID: 2, treeID: 23};
 
     // when
     messagingService.publish(TEST_NAVIGATION_SELECT, selectionID);

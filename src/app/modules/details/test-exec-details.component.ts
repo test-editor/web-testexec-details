@@ -3,7 +3,7 @@ import { MessagingService } from '@testeditor/messaging-service';
 import { ISubscription, Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import { TEST_NAVIGATION_SELECT } from './event-types';
-import { TestExecutionDetailsService } from '../test-execution-details/test-execution-details.service';
+import { TestExecutionDetailsService, TestRunID } from '../details-service/test-execution-details.service';
 
 @Component({
   selector: 'app-test-exec-details',
@@ -36,7 +36,7 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateDetails(id: number): any {
+  updateDetails(id: TestRunID): any {
     this.detailsService.getTestExecutionDetails(id, () => { /*TODO: update! */}, () => { /*TODO: handle errors!*/});
   }
 

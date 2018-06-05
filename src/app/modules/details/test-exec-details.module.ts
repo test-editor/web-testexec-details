@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TestExecDetailsComponent } from './test-exec-details.component';
 import { PropertiesViewModule } from '../properties/properties-view.module';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { DefaultTestExecutionDetailsService, TestExecutionDetailsService } from '../details-service/test-execution-details.service';
 
 @NgModule({
   imports: [
@@ -13,6 +14,9 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
   ],
   exports: [
     TestExecDetailsComponent
+  ],
+  providers: [
+    {provide: TestExecutionDetailsService, useClass: DefaultTestExecutionDetailsService}
   ]
 })
 export class TestExecDetailsModule { }
