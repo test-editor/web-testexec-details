@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TestExecDetailsComponent } from './test-exec-details.component';
+import { PropertiesViewComponent } from '../properties/properties-view.component';
 
 describe('TestExecDetailsComponent', () => {
   let component: TestExecDetailsComponent;
@@ -8,7 +9,7 @@ describe('TestExecDetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TestExecDetailsComponent ]
+      declarations: [ TestExecDetailsComponent, PropertiesViewComponent ]
     })
     .compileComponents();
   }));
