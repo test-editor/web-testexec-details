@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MessagingService } from '@testeditor/messaging-service';
 import { ISubscription, Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
-import { TEST_NAVIGATION_SELECT } from './event-types';
+import { TEST_NAVIGATION_SELECT } from '../event-types';
 import { TestExecutionDetailsService, TestRunID, TestExecutionDetails, DataKind } from '../details-service/test-execution-details.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { TestExecutionDetailsService, TestRunID, TestExecutionDetails, DataKind 
 })
 export class TestExecDetailsComponent implements OnInit, OnDestroy {
 
-  private properties = {
+  private properties: any = {
     'Type': 'Test Step',
     'Execution Time': '4.2 seconds',
     'Status': 'OK'
@@ -37,18 +37,22 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateDetails(id: TestRunID): any {
-    this.detailsService.getTestExecutionDetails(id,
-      (details: TestExecutionDetails[]) => {
-        details.forEach((entry) => {
-          switch (entry.type) {
-            case DataKind.image: this.screenshotURL = entry.content; break;
-            case DataKind.properties: this.properties = entry.content; break;
-            case DataKind.text: this.rawLog = entry.content; break;
-          }
-        });
-      },
-      () => { /*TODO: handle errors!*/});
+  async updateDetails(id: TestRunID) {
+    const details = await this.detailsService.getTestExecutionDetails(id);
+    if (details) {
+      details.forEach((entry) => {
+        switch (entry.type) {
+          case DataKind.image: this.screenshotURL = entry.content; break;
+          case DataKind.properties: this.properties = entry.content; break;
+          case DataKind.text: this.rawLog = entry.content; break;
+        }
+      });
+    } else {
+      console.log('warning: received empty details data');
+      this.screenshotURL = '';
+      this.properties = {};
+      this.rawLog = '';
+    }
   }
 
 }

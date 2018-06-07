@@ -1,10 +1,10 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 
 import { TestExecDetailsComponent } from './test-exec-details.component';
 import { PropertiesViewComponent } from '../properties/properties-view.component';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { MessagingModule, MessagingService } from '@testeditor/messaging-service';
-import { TEST_NAVIGATION_SELECT } from './event-types';
+import { TEST_NAVIGATION_SELECT } from '../event-types';
 import { TestExecutionDetailsService, DefaultTestExecutionDetailsService } from '../details-service/test-execution-details.service';
 import { TestRunID, TestExecutionDetails, DataKind } from '../details-service/test-execution-details.service';
 import { mock, instance, anything, verify, when } from 'ts-mockito';
@@ -35,10 +35,8 @@ describe('TestExecDetailsComponent', () => {
   });
 
   function setMockServiceResponse(id: TestRunID, details: TestExecutionDetails[]): void {
-    when(mockedTestExecDetailsService.getTestExecutionDetails(id ? id : anything(), anything(), anything()))
-      .thenCall((jobID: TestRunID, onResponse?: (details: TestExecutionDetails[]) => void, onError?: (error: any) => void) => {
-        onResponse(details);
-      });
+    when(mockedTestExecDetailsService.getTestExecutionDetails(id ? id : anything()))
+      .thenReturn(Promise.resolve(details));
   }
 
   it('should create', () => {
@@ -53,8 +51,38 @@ describe('TestExecDetailsComponent', () => {
     messagingService.publish(TEST_NAVIGATION_SELECT, selectionID);
 
     // then
-    verify(mockedTestExecDetailsService.getTestExecutionDetails(selectionID, anything(), anything())).called();
+    verify(mockedTestExecDetailsService.getTestExecutionDetails(selectionID)).called();
   });
+
+  it('resets details on receiving TEST_NAVIGATION_SELECT event when the payload is "null"', fakeAsync(() => {
+    // given
+    const selectionID: TestRunID = {testSuiteID: 42, testSuiteRunID: 1, testRunID: 2, treeID: 23};
+    setMockServiceResponse(selectionID, null);
+    console.log = jasmine.createSpy('log');
+
+    // when
+    try {
+      messagingService.publish(TEST_NAVIGATION_SELECT, selectionID);
+      flush();
+      fixture.detectChanges();
+      flush();
+
+    // then
+    } catch (error) {
+      fail(error);
+    }
+
+    expect(console.log).toHaveBeenCalledWith('warning: received empty details data');
+
+    const image = fixture.debugElement.query(By.css('img'));
+    expect(image.properties.src).toEqual('');
+
+    const definitionList = fixture.debugElement.query(By.css('dl'));
+    expect(definitionList).toBeFalsy();
+
+    const textArea = fixture.debugElement.query(By.css('textarea'));
+    expect(textArea.nativeElement.innerHTML).toEqual('');
+  }));
 
   it('fills test step details tab when retrieved details contain data of type "properties"', fakeAsync(() => {
     // given

@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HttpProviderService } from '../http-provider-service/http-provider.service';
+import { TestExecutionDetailsServiceConfig } from './test-execution-details-service-config';
 
 export enum DataKind {
   text,
@@ -34,19 +36,23 @@ export interface TestRunID {
 
 
 export abstract class TestExecutionDetailsService {
-  abstract getTestExecutionDetails(
-    id: TestRunID,
-    onResponse?: (details: TestExecutionDetails[]) => void,
-    onError?: (error: any) => void
-  ): void;
+  abstract async getTestExecutionDetails(id: TestRunID): Promise<TestExecutionDetails[]>;
 }
 
 @Injectable()
 export class DefaultTestExecutionDetailsService extends TestExecutionDetailsService {
 
-  getTestExecutionDetails(jobID: TestRunID, onResponse?: (details: TestExecutionDetails[]) => void, onError?: (error: any) => void): void {
-    throw new Error('Method not implemented.');
+  constructor(private httpProvider: HttpProviderService, private config: TestExecutionDetailsServiceConfig) { super(); }
+
+  async getTestExecutionDetails(jobID: TestRunID): Promise<TestExecutionDetails[]> {
+    const client = await this.httpProvider.getHttpClient();
+    return await client.get<TestExecutionDetails[]>(this.getURL(jobID)).toPromise();
   }
-  constructor() { super(); }
+
+  private getURL(job: TestRunID): string {
+    const url = this.config.url + '?' + Object.keys(job).map((key) => `${key}=${job[key]}`).join('&');
+    return url;
+  }
+
 
 }
