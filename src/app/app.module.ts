@@ -13,7 +13,7 @@ import { DefaultTestExecutionDetailsService, TestExecutionDetailsService } from 
   ],
   imports: [
     BrowserModule,
-    TestExecDetailsModule,
+    TestExecDetailsModule.forRoot({url: 'http://localhost:9080/test-details'}),
     MessagingModule.forRoot(),
   ],
   providers: [

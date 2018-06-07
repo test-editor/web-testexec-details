@@ -1,6 +1,7 @@
 import { TestBed, inject, fakeAsync, tick, flush } from '@angular/core/testing';
 
-import { TestExecutionDetailsService, DefaultTestExecutionDetailsService, TestRunID, TestExecutionDetails, DataKind } from './test-execution-details.service';
+import { TestExecutionDetailsService, DefaultTestExecutionDetailsService,
+  TestRunID, TestExecutionDetails, DataKind } from './test-execution-details.service';
 import { TestExecutionDetailsServiceConfig } from './test-execution-details-service-config';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
@@ -42,7 +43,7 @@ describe('TestExecutionDetailsService', () => {
     expect(service).toBeTruthy();
   }));
 
-  it('makes correct HTTP call', fakeAsync(inject([HttpTestingController, TestExecutionDetailsService], 
+  it('makes correct HTTP call', fakeAsync(inject([HttpTestingController, TestExecutionDetailsService],
     (httpController: HttpTestingController, service: TestExecutionDetailsService) => {
     // given
     const id: TestRunID = {testSuiteID: 42, testSuiteRunID: 1, testRunID: 2, treeID: 23};
