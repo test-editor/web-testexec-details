@@ -4,6 +4,8 @@ import { TestExecDetailsComponent } from './modules/details/test-exec-details.co
 import { PropertiesViewComponent } from './modules/properties/properties-view.component';
 import { By } from '@angular/platform-browser';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { MessagingModule } from '@testeditor/messaging-service';
+import { DefaultTestExecutionDetailsService, TestExecutionDetailsService } from './modules/details-service/test-execution-details.service';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -13,7 +15,10 @@ describe('AppComponent', () => {
         TestExecDetailsComponent,
         PropertiesViewComponent
       ],
-      imports: [ TabsModule.forRoot() ]
+      imports: [ TabsModule.forRoot(), MessagingModule.forRoot() ],
+      providers: [
+        { provide: TestExecutionDetailsService, useClass: DefaultTestExecutionDetailsService }
+      ]
     }).compileComponents();
   }));
 
