@@ -5,8 +5,7 @@ import { PropertiesViewComponent } from './modules/properties/properties-view.co
 import { By } from '@angular/platform-browser';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { MessagingModule } from '@testeditor/messaging-service';
-import { TestExecutionDetailsService } from './modules/details-service/test-execution-details.service';
-import { DefaultTestExecutionDetailsService } from './modules/details-service/test-execution-details.service';
+import { DefaultTestExecutionDetailsService, TestExecutionDetailsService } from './modules/details-service/test-execution-details.service';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {

@@ -160,4 +160,27 @@ DEBUG: Another log entry.`;
     expect(definitionList.children[0].children[1].nativeElement.innerText).toEqual('OK');
   }));
 
+  it('escapes text inserted into the DOM', fakeAsync(() => {
+    // given
+    const sampleLog =
+    `log entry</textarea><div id="BAD"><p>NOT ALLOWED</p></div>`;
+
+    const selectionID: TestRunID = {testSuiteID: 42, testSuiteRunID: 1, testRunID: 2, treeID: 23};
+    setMockServiceResponse(selectionID, [{
+      type: DataKind.text,
+      content: sampleLog}]);
+
+    // when
+    messagingService.publish(TEST_NAVIGATION_SELECT, selectionID);
+    tick();
+    fixture.detectChanges();
+
+    // then
+    const textArea = fixture.debugElement.query(By.css('textarea'));
+    expect(textArea.nativeElement.innerHTML).toEqual(
+      'log entry&lt;/textarea&gt;&lt;div id="BAD"&gt;&lt;p&gt;NOT ALLOWED&lt;/p&gt;&lt;/div&gt;');
+    const illegalElement = fixture.debugElement.query(By.css('#BAD'));
+    expect(illegalElement).toBeFalsy();
+  }));
+
 });
