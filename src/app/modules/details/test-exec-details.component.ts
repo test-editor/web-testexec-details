@@ -12,11 +12,7 @@ import { TestExecutionDetailsService, TestRunID, TestExecutionDetails, DataKind 
 })
 export class TestExecDetailsComponent implements OnInit, OnDestroy {
 
-  private properties: any = {
-    'Type': 'Test Step',
-    'Execution Time': '4.2 seconds',
-    'Status': 'OK'
-  };
+  private properties: any = {};
   private screenshotURL = '';
   private rawLog = '';
 
