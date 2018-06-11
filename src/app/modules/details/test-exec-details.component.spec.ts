@@ -16,6 +16,22 @@ describe('TestExecDetailsComponent', () => {
   let messagingService: MessagingService;
   const mockedTestExecDetailsService = mock(DefaultTestExecutionDetailsService);
 
+  const sampleData = [{
+    type: DataKind.text,
+    content: 'this will be ignored / overwritten!'
+  }, {
+    type: DataKind.text,
+    content: `INFO: This is a log entry!
+DEBUG: Another log entry.`
+  }, {
+    type: DataKind.properties,
+    content: {
+      'Status': 'OK'
+  }}, {
+    type: DataKind.image,
+    content: 'http://testeditor.org/wp-content/uploads/2014/04/LogoTesteditor-e1403289032145.png'
+  }];
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ TestExecDetailsComponent, PropertiesViewComponent ],
@@ -150,26 +166,8 @@ DEBUG: Another log entry.`;
 
   it('fills all tabs with retrieved details data', fakeAsync(() => {
     // given
-    const sampleLog =
-    `INFO: This is a log entry!
-DEBUG: Another log entry.`;
-    const imageURL = 'http://testeditor.org/wp-content/uploads/2014/04/LogoTesteditor-e1403289032145.png';
-
     const selectionID: TestRunID = {testSuiteID: 42, testSuiteRunID: 1, testRunID: 2, treeID: 23};
-    setMockServiceResponse(selectionID, [{
-      type: DataKind.text,
-      content: 'this will be ignored / overwritten!'
-    }, {
-      type: DataKind.text,
-      content: sampleLog
-    }, {
-      type: DataKind.properties,
-      content: {
-        'Status': 'OK'
-    }}, {
-      type: DataKind.image,
-      content: imageURL
-    }]);
+    setMockServiceResponse(selectionID, sampleData);
 
     // when
     messagingService.publish(TEST_NAVIGATION_SELECT, selectionID);
@@ -178,10 +176,10 @@ DEBUG: Another log entry.`;
 
     // then
     const textArea = fixture.debugElement.query(By.css('textarea'));
-    expect(textArea.nativeElement.innerHTML).toEqual(sampleLog);
+    expect(textArea.nativeElement.innerHTML).toEqual(sampleData[1].content);
 
     const image = fixture.debugElement.query(By.css('img'));
-    expect(image.nativeElement.src).toEqual(imageURL);
+    expect(image.nativeElement.src).toEqual(sampleData[3].content);
 
     const definitionList = fixture.debugElement.query(By.css('dl'));
     expect(definitionList.children[0].children[0].nativeElement.innerText).toEqual('Status');
@@ -209,6 +207,34 @@ DEBUG: Another log entry.`;
       'log entry&lt;/textarea&gt;&lt;div id="BAD"&gt;&lt;p&gt;NOT ALLOWED&lt;/p&gt;&lt;/div&gt;');
     const illegalElement = fixture.debugElement.query(By.css('#BAD'));
     expect(illegalElement).toBeFalsy();
+  }));
+
+  it('clears all fields first before setting new values on update', fakeAsync(() => {
+    // given
+    const previousSelectionID: TestRunID = {testSuiteID: 42, testSuiteRunID: 1, testRunID: 2, treeID: 23};
+    setMockServiceResponse(previousSelectionID, sampleData);
+    messagingService.publish(TEST_NAVIGATION_SELECT, previousSelectionID);
+    tick();
+    fixture.detectChanges();
+
+    const newSelectionID: TestRunID = {testSuiteID: 42, testSuiteRunID: 1, testRunID: 2, treeID: 4711};
+    setMockServiceResponse(newSelectionID, []);
+
+    // when
+    messagingService.publish(TEST_NAVIGATION_SELECT, newSelectionID);
+    tick();
+    fixture.detectChanges();
+
+    // then
+    const textArea = fixture.debugElement.query(By.css('textarea'));
+    expect(textArea.nativeElement.innerHTML).toEqual('');
+
+    const image = fixture.debugElement.query(By.css('img'));
+    expect(image.properties.src).toEqual('');
+
+    const definitionList = fixture.debugElement.query(By.css('dl'));
+    expect(definitionList).toBeFalsy();
+
   }));
 
 });

@@ -35,6 +35,9 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
 
   async updateDetails(id: TestRunID) {
     const details = await this.detailsService.getTestExecutionDetails(id);
+    this.screenshotURL = '';
+    this.properties = {};
+    this.rawLog = '';
     if (details) {
       details.forEach((entry) => {
         switch (entry.type) {
@@ -45,9 +48,6 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
       });
     } else {
       console.log('warning: received empty details data');
-      this.screenshotURL = '';
-      this.properties = {};
-      this.rawLog = '';
     }
   }
 
