@@ -49,7 +49,7 @@ describe('TestExecutionDetailsService', () => {
     const id: TestRunID = {testSuiteID: 42, testSuiteRunID: 1, testRunID: 2, treeID: 23};
     const testExecutionRequest = {
       method: 'GET',
-      url: serviceConfig.url + '?testSuiteID=42&testSuiteRunID=1&testRunID=2&treeID=23'
+      url: serviceConfig.url + '/42/1/2/23'
     };
     const mockResponse: TestExecutionDetails[] = [{ type: DataKind.text, content: 'Hello World!' }];
 

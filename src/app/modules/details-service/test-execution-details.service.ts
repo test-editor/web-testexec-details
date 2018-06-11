@@ -50,9 +50,9 @@ export class DefaultTestExecutionDetailsService extends TestExecutionDetailsServ
   }
 
   private getURL(job: TestRunID): string {
-    const url = this.config.url + '?' + Object.keys(job).map((key) => `${key}=${job[key]}`).join('&');
+    const url = `${this.config.url}/${job.testSuiteID}/${job.testSuiteRunID}/${job.testRunID}/${job.treeID}`;
+    console.log('URL IS ' + url);
     return url;
   }
-
 
 }
