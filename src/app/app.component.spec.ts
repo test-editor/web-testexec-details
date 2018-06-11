@@ -6,6 +6,8 @@ import { By } from '@angular/platform-browser';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { MessagingModule } from '@testeditor/messaging-service';
 import { DefaultTestExecutionDetailsService, TestExecutionDetailsService } from './modules/details-service/test-execution-details.service';
+import { HttpProviderService } from './modules/http-provider-service/http-provider.service';
+import { TestExecutionDetailsServiceConfig } from './modules/details-service/test-execution-details-service-config';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -17,7 +19,9 @@ describe('AppComponent', () => {
       ],
       imports: [ TabsModule.forRoot(), MessagingModule.forRoot() ],
       providers: [
-        { provide: TestExecutionDetailsService, useClass: DefaultTestExecutionDetailsService }
+        { provide: TestExecutionDetailsService, useClass: DefaultTestExecutionDetailsService },
+        HttpProviderService,
+        TestExecutionDetailsServiceConfig
       ]
     }).compileComponents();
   }));
