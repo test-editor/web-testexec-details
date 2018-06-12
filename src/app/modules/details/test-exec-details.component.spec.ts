@@ -6,9 +6,10 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { MessagingModule, MessagingService } from '@testeditor/messaging-service';
 import { TEST_NAVIGATION_SELECT } from '../event-types';
 import { TestExecutionDetailsService, DefaultTestExecutionDetailsService } from '../details-service/test-execution-details.service';
-import { TestRunID, TestExecutionDetails, DataKind } from '../details-service/test-execution-details.service';
+import { TestExecutionDetails, DataKind } from '../details-service/test-execution-details.service';
 import { mock, instance, anything, verify, when } from 'ts-mockito';
 import { By } from '@angular/platform-browser';
+import { TestRunId } from './test-run-id';
 
 describe('TestExecDetailsComponent', () => {
   let component: TestExecDetailsComponent;
@@ -50,7 +51,7 @@ DEBUG: Another log entry.`
     fixture.detectChanges();
   });
 
-  function setMockServiceResponse(id: TestRunID, details: TestExecutionDetails[]): void {
+  function setMockServiceResponse(id: TestRunId, details: TestExecutionDetails[]): void {
     when(mockedTestExecDetailsService.getTestExecutionDetails(id ? id : anything()))
       .thenReturn(Promise.resolve(details));
   }
@@ -61,7 +62,7 @@ DEBUG: Another log entry.`
 
   it('updates details on receiving TEST_NAVIGATION_SELECT event', () => {
     // given
-    const selectionID: TestRunID = {testSuiteID: 42, testSuiteRunID: 1, testRunID: 2, treeID: 23};
+    const selectionID = new TestRunId('42', '1',  '2', '23');
 
     // when
     messagingService.publish(TEST_NAVIGATION_SELECT, selectionID);
@@ -72,7 +73,7 @@ DEBUG: Another log entry.`
 
   it('resets details on receiving TEST_NAVIGATION_SELECT event when the payload is "null"', fakeAsync(() => {
     // given
-    const selectionID: TestRunID = {testSuiteID: 42, testSuiteRunID: 1, testRunID: 2, treeID: 23};
+    const selectionID = new TestRunId('42', '1',  '2', '23');
     setMockServiceResponse(selectionID, null);
     console.log = jasmine.createSpy('log');
 
@@ -102,7 +103,7 @@ DEBUG: Another log entry.`
 
   it('fills test step details tab when retrieved details contain data of type "properties"', fakeAsync(() => {
     // given
-    const selectionID: TestRunID = {testSuiteID: 42, testSuiteRunID: 1, testRunID: 2, treeID: 23};
+    const selectionID = new TestRunId('42', '1',  '2', '23');
     setMockServiceResponse(selectionID, [{
       type: DataKind.properties,
       content: {
@@ -128,7 +129,7 @@ DEBUG: Another log entry.`
   it('sets image url in screenshot tab when retrieved details contain data of type "image"', fakeAsync(() => {
     // given
     const imageURL = 'http://testeditor.org/wp-content/uploads/2014/04/LogoTesteditor-e1403289032145.png';
-    const selectionID: TestRunID = {testSuiteID: 42, testSuiteRunID: 1, testRunID: 2, treeID: 23};
+    const selectionID = new TestRunId('42', '1',  '2', '23');
     setMockServiceResponse(selectionID, [{
       type: DataKind.image,
       content: imageURL}]);
@@ -149,7 +150,7 @@ DEBUG: Another log entry.`
     `INFO: This is a log entry!
 DEBUG: Another log entry.`;
 
-    const selectionID: TestRunID = {testSuiteID: 42, testSuiteRunID: 1, testRunID: 2, treeID: 23};
+    const selectionID = new TestRunId('42', '1',  '2', '23');
     setMockServiceResponse(selectionID, [{
       type: DataKind.text,
       content: sampleLog}]);
@@ -166,7 +167,7 @@ DEBUG: Another log entry.`;
 
   it('fills all tabs with retrieved details data', fakeAsync(() => {
     // given
-    const selectionID: TestRunID = {testSuiteID: 42, testSuiteRunID: 1, testRunID: 2, treeID: 23};
+    const selectionID = new TestRunId('42', '1',  '2', '23');
     setMockServiceResponse(selectionID, sampleData);
 
     // when
@@ -191,7 +192,7 @@ DEBUG: Another log entry.`;
     const sampleLog =
     `log entry</textarea><div id="BAD"><p>NOT ALLOWED</p></div>`;
 
-    const selectionID: TestRunID = {testSuiteID: 42, testSuiteRunID: 1, testRunID: 2, treeID: 23};
+    const selectionID = new TestRunId('42', '1',  '2', '23');
     setMockServiceResponse(selectionID, [{
       type: DataKind.text,
       content: sampleLog}]);
@@ -211,13 +212,13 @@ DEBUG: Another log entry.`;
 
   it('clears all fields first before setting new values on update', fakeAsync(() => {
     // given
-    const previousSelectionID: TestRunID = {testSuiteID: 42, testSuiteRunID: 1, testRunID: 2, treeID: 23};
+    const previousSelectionID = new TestRunId('42', '1',  '2', '23');
     setMockServiceResponse(previousSelectionID, sampleData);
     messagingService.publish(TEST_NAVIGATION_SELECT, previousSelectionID);
     tick();
     fixture.detectChanges();
 
-    const newSelectionID: TestRunID = {testSuiteID: 42, testSuiteRunID: 1, testRunID: 2, treeID: 4711};
+    const newSelectionID = new TestRunId('42', '1', '2', '4711');
     setMockServiceResponse(newSelectionID, []);
 
     // when

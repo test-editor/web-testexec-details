@@ -1,8 +1,8 @@
-import { TestExecutionDetailsService, TestRunID,
-    TestExecutionDetails, DataKind } from './modules/details-service/test-execution-details.service';
+import { TestExecutionDetailsService, TestExecutionDetails, DataKind } from './modules/details-service/test-execution-details.service';
+import { TestRunId } from './modules/details/test-run-id';
 
 export class DummyTestExecutionDetailsService extends TestExecutionDetailsService {
-    async getTestExecutionDetails(id: TestRunID): Promise<TestExecutionDetails[]> {
+    async getTestExecutionDetails(id: TestRunId): Promise<TestExecutionDetails[]> {
         return Promise.resolve([{
           type: DataKind.properties,
           content: {
