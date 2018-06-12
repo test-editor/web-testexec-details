@@ -3,7 +3,8 @@ import { MessagingService } from '@testeditor/messaging-service';
 import { ISubscription, Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import { TEST_NAVIGATION_SELECT } from '../event-types';
-import { TestExecutionDetailsService, TestRunID, TestExecutionDetails, DataKind } from '../details-service/test-execution-details.service';
+import { TestExecutionDetailsService, DataKind } from '../details-service/test-execution-details.service';
+import { TestRunId } from './test-run-id';
 
 @Component({
   selector: 'app-test-exec-details',
@@ -33,7 +34,7 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  async updateDetails(id: TestRunID) {
+  async updateDetails(id: TestRunId) {
     const details = await this.detailsService.getTestExecutionDetails(id);
     this.screenshotURL = '';
     this.properties = {};
