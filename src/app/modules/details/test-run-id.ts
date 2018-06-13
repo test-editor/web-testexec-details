@@ -35,3 +35,13 @@ export class TestRunId {
     return pathString;
   }
 }
+
+export function isTestRunId(object: TestRunId | any): object is TestRunId {
+  return object &&
+    (<TestRunId>object).createChildID !== undefined &&
+    (<TestRunId>object).testRunID !== undefined &&
+    (<TestRunId>object).testSuiteID !== undefined &&
+    (<TestRunId>object).testSuiteRunID !== undefined &&
+    (<TestRunId>object).toPathString !== undefined &&
+    (<TestRunId>object).treeID !== undefined;
+}
