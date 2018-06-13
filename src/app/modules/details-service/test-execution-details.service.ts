@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpProviderService } from '../http-provider-service/http-provider.service';
 import { TestExecutionDetailsServiceConfig } from './test-execution-details-service-config';
-import { TestRunId } from '../details/test-run-id';
+import { TestRunId, isTestRunId } from '../details/test-run-id';
 
 export enum DataKind {
   text = 'text',
@@ -24,8 +24,13 @@ export class DefaultTestExecutionDetailsService extends TestExecutionDetailsServ
   constructor(private httpProvider: HttpProviderService, private config: TestExecutionDetailsServiceConfig) { super(); }
 
   async getTestExecutionDetails(jobID: TestRunId): Promise<TestExecutionDetails[]> {
-    const client = await this.httpProvider.getHttpClient();
-    return await client.get<TestExecutionDetails[]>(this.getURL(jobID)).toPromise();
+    if (isTestRunId(jobID)) {
+      const client = await this.httpProvider.getHttpClient();
+      return await client.get<TestExecutionDetails[]>(this.getURL(jobID)).toPromise();
+    } else {
+      return null;
+    }
+
   }
 
   private getURL(job: TestRunId): string {
