@@ -1,10 +1,10 @@
 <div *ngIf="isModelValid() else modelInvalidBlock">
 <dl *ngIf="propertyNames().length > 0">
   <div *ngFor="let propertyName of propertyNames()">
-    <dt>{{propertyName}}</dt><dd>{{propertyValue(propertyName)}}</dd>
+    <dt>{{propertyName}}</dt><dd>{{propertyValue(propertyName)}}&nbsp;</dd>
   </div>
 </dl>
 </div>
 <ng-template #modelInvalidBlock>
-  <p class="error">Cannot display data of unexpected type: {{typeOfModel()}}</p>
+  <p class="error">Cannot display data of unexpected type: {{typeOf(model)}}</p>
 </ng-template>

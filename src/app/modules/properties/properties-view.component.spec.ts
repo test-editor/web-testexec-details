@@ -28,7 +28,8 @@ describe('PropertiesViewComponent', () => {
     // given
     const objectToBeDisplayed = {
       'Text Property': 'some information',
-      'Number Property': '3.14159'
+      'Number Property': '3.14159',
+      'This is empty': '',
     };
 
     // when
@@ -38,11 +39,50 @@ describe('PropertiesViewComponent', () => {
     // then
     const definitionList = fixture.debugElement.query(By.css('dl'));
     expect(definitionList.nativeElement).toBeTruthy();
-    expect(definitionList.children.length).toEqual(2);
+    expect(definitionList.children.length).toEqual(3);
     expect(definitionList.children[0].children[0].nativeElement.innerText).toEqual('Text Property');
-    expect(definitionList.children[0].children[1].nativeElement.innerText).toEqual('some information');
+    expect(definitionList.children[0].children[1].nativeElement.innerText.trim()).toEqual('some information');
     expect(definitionList.children[1].children[0].nativeElement.innerText).toEqual('Number Property');
-    expect(definitionList.children[1].children[1].nativeElement.innerText).toEqual('3.14159');
+    expect(definitionList.children[1].children[1].nativeElement.innerText.trim()).toEqual('3.14159');
+    expect(definitionList.children[2].children[0].nativeElement.innerText).toEqual('This is empty');
+    expect(definitionList.children[2].children[1].nativeElement.innerText.length).toBeGreaterThan(0);
+  });
+
+  it('should display complex object properties in JSON format', () => {
+    // given
+    const objectToBeDisplayed = {
+      'Course Information': {
+        'Description': 'How to defend yourself against different kinds of fruit',
+        'Fruits': ['Banana', 'Apple', 'Orange', 'Pomegranate' ],
+        'Lesson': 1,
+        'Object': {
+          'Nested Field': 'Lorem ipsum dolor sit amet'
+        }
+      }
+    };
+
+    // when
+    component.model = objectToBeDisplayed;
+    fixture.detectChanges();
+
+    // then
+    const definitionList = fixture.debugElement.query(By.css('dl'));
+    expect(definitionList.nativeElement).toBeTruthy();
+    expect(definitionList.children.length).toEqual(1);
+    expect(definitionList.children[0].children[0].nativeElement.innerText).toEqual('Course Information');
+    expect(definitionList.children[0].children[1].nativeElement.innerText.trim()).toEqual(`{
+  "Description": "How to defend yourself against different kinds of fruit",
+  "Fruits": [
+    "Banana",
+    "Apple",
+    "Orange",
+    "Pomegranate"
+  ],
+  "Lesson": 1,
+  "Object": {
+    "Nested Field": "Lorem ipsum dolor sit amet"
+  }
+}`);
   });
 
   it('should not display a list if model is undefined', () => {
