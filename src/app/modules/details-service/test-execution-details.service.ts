@@ -15,7 +15,7 @@ export interface TestExecutionDetails {
 }
 
 export abstract class TestExecutionDetailsService {
-  abstract async getTestExecutionDetails(id: TestRunId): Promise<TestExecutionDetails[]>;
+  abstract async getTestExecutionDetails(id: string): Promise<TestExecutionDetails[]>;
 }
 
 @Injectable()
@@ -23,18 +23,8 @@ export class DefaultTestExecutionDetailsService extends TestExecutionDetailsServ
 
   constructor(private httpProvider: HttpProviderService, private config: TestExecutionDetailsServiceConfig) { super(); }
 
-  async getTestExecutionDetails(jobID: TestRunId): Promise<TestExecutionDetails[]> {
-    if (isTestRunId(jobID)) {
-      const client = await this.httpProvider.getHttpClient();
-      return await client.get<TestExecutionDetails[]>(this.getURL(jobID)).toPromise();
-    } else {
-      return null;
-    }
-
+  async getTestExecutionDetails(jobID: string): Promise<TestExecutionDetails[]> {
+    const client = await this.httpProvider.getHttpClient();
+    return await client.get<TestExecutionDetails[]>(`${this.config.url}/${jobID}`).toPromise();
   }
-
-  private getURL(job: TestRunId): string {
-    return `${this.config.url}/${job.toPathString()}`;
-  }
-
 }
