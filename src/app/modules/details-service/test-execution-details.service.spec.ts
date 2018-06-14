@@ -47,7 +47,7 @@ describe('TestExecutionDetailsService', () => {
   it('makes correct HTTP call', fakeAsync(inject([HttpTestingController, TestExecutionDetailsService],
     (httpController: HttpTestingController, service: TestExecutionDetailsService) => {
     // given
-    const id = new TestRunId('42', '1', '2', '23');
+    const id = '42/1/2/23';
     const testExecutionRequest = {
       method: 'GET',
       url: serviceConfig.url + '/42/1/2/23'

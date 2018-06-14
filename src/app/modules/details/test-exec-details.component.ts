@@ -34,7 +34,7 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  async updateDetails(id: TestRunId) {
+  async updateDetails(id: string) {
     const details = await this.detailsService.getTestExecutionDetails(id);
     this.screenshotURL = '';
     this.properties = {};
