@@ -35,10 +35,10 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
   }
 
   async updateDetails(id: string) {
-    const details = await this.detailsService.getTestExecutionDetails(id);
     this.screenshotURL = '';
     this.properties = {};
     this.rawLog = '';
+    const details = await this.detailsService.getTestExecutionDetails(id);
     if (details) {
       details.forEach((entry) => {
         switch (entry.type) {
