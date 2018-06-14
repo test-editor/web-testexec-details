@@ -121,9 +121,9 @@ DEBUG: Another log entry.`
     expect(definitionList.nativeElement).toBeTruthy();
     expect(definitionList.children.length).toEqual(2);
     expect(definitionList.children[0].children[0].nativeElement.innerText).toEqual('Execution Time');
-    expect(definitionList.children[0].children[1].nativeElement.innerText).toEqual('3.14159 seconds');
+    expect(definitionList.children[0].children[1].nativeElement.innerText.trim()).toEqual('3.14159 seconds');
     expect(definitionList.children[1].children[0].nativeElement.innerText).toEqual('Status');
-    expect(definitionList.children[1].children[1].nativeElement.innerText).toEqual('OK');
+    expect(definitionList.children[1].children[1].nativeElement.innerText.trim()).toEqual('OK');
   }));
 
   it('sets image url in screenshot tab when retrieved details contain data of type "image"', fakeAsync(() => {
@@ -184,7 +184,7 @@ DEBUG: Another log entry.`;
 
     const definitionList = fixture.debugElement.query(By.css('dl'));
     expect(definitionList.children[0].children[0].nativeElement.innerText).toEqual('Status');
-    expect(definitionList.children[0].children[1].nativeElement.innerText).toEqual('OK');
+    expect(definitionList.children[0].children[1].nativeElement.innerText.trim()).toEqual('OK');
   }));
 
   it('escapes text inserted into the DOM', fakeAsync(() => {

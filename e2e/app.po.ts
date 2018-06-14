@@ -10,6 +10,6 @@ export class AppPage {
   }
 
   getPropertyValue(index: number) {
-    return element(by.xpath(`(//dl/div/dd)[${index}]`)).getText();
+    return element(by.xpath(`(//dl/div/dd)[${index}]`)).getText().then((text) => text.trim());
   }
 }
