@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpProviderService } from '../http-provider-service/http-provider.service';
 import { TestExecutionDetailsServiceConfig } from './test-execution-details-service-config';
-import { TestRunId, isTestRunId } from '../details/test-run-id';
 
 export enum DataKind {
   text = 'text',
