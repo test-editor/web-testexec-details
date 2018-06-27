@@ -5,12 +5,13 @@ echo "old version (before tagging) was v$old_version"
 if [ "$GH_EMAIL" == "" -o "$GH_TOKEN" == "" ]; then
   echo "tagging is not done since email and token for push into github is missing!"
 else
-  npm version patch
-  new_version=`npm view @testeditor/testexec-details version`
-  echo "tagging now with v$new_version"
+  # configure for git push to work automatically
   git config user.name "automatic patch version publish"
   git config user.email "$GH_EMAIL"
   git remote add gh-token "$GH_TOKEN"
-  git tag v$new_version
-  git push origin v$new_version
+  git checkout - # if detached, try to return to a regular branch
+  npm version patch # create git commit and tag automatically!
+  # postversion action in package.json will execute git push && git push --tags
+  new_version=`npm view @testeditor/testexec-details version`
+  echo "tagged now with v$new_version"
 fi
