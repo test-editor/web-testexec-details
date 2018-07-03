@@ -17,7 +17,6 @@ export class PropertiesViewComponent implements OnInit {
   private propertyValue = (propertyName: string) => {
     let result = this.model[propertyName];
     const type = this.typeOf(result);
-    console.log(`type of ${propertyName} is ${type}`);
     if (type === typeof {} || type === 'array') {
       result = JSON.stringify(this.model[propertyName], null, 2);
     }
