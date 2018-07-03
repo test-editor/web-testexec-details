@@ -13,6 +13,7 @@ else
   git remote add origin https://$GH_TOKEN@github.com$github_project
   git remote -v # show the now configured remotes
   git checkout - # if detached, try to return to a regular branch
+  git fetch # necessary to make origin/master known
   git branch --set-upstream-to=origin/master
   git remote -v # show the now configured remotes
   git status # show some info
