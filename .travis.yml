@@ -40,6 +40,9 @@ script:
 - npm run e2e
 after_success:
 - npm run packagr
+# list existing configuration and remotes
+- git config -l
+- git remote -v
 # Autoincrement of patch level version:
 # Tag the repo with a new patch level version tag, if this build is done on
 #     'FIREFOX_VERSION = latest' and (only one of the matrix-builds is relevant)
