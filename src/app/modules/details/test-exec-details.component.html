@@ -4,7 +4,10 @@
             <app-properties-view [model]="properties"></app-properties-view>
         </tab>
         <tab heading="Screenshot" id="screenshot-tab">
-            <img src="{{screenshotURL}}" />
+            <img id='screenshot' [src]="encodedScreenshot" alt="screenshot" *ngIf="!isImageLoading; else noImageFound">
+            <ng-template #noImageFound>
+                <p id='no-screenshot'>No screenshot available.</p>
+            </ng-template>
         </tab>
         <tab heading="Raw Log" id="log-tab">
             <textarea>{{rawLog}}</textarea>

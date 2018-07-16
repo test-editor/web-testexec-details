@@ -7,6 +7,10 @@ import { TestExecDetailsModule } from './modules/details/test-exec-details.modul
 import { MessagingModule } from '@testeditor/messaging-service';
 import { TestExecutionDetailsService } from './modules/details-service/test-execution-details.service';
 import { DummyTestExecutionDetailsService } from './dummy-test-execution-details.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { ResourceService } from './modules/resource-service/resource.service';
+import { DummyResourceService } from './dummy-resource.service';
+import { FileReaderProvider, DefaultFileReaderProvider } from './modules/details/test-exec-details.component';
 
 @NgModule({
   declarations: [
@@ -14,11 +18,15 @@ import { DummyTestExecutionDetailsService } from './dummy-test-execution-details
   ],
   imports: [
     BrowserModule,
-    TestExecDetailsModule.forRoot({url: 'http://localhost:9080/test-details'}),
+    HttpClientModule,
+    TestExecDetailsModule.forRoot({url: 'http://localhost:9080/test-details'}, {resourceServiceUrl: 'http://localhost:9080'}),
     MessagingModule.forRoot(),
   ],
   providers: [
-    { provide: TestExecutionDetailsService, useClass: DummyTestExecutionDetailsService }
+    HttpClient,
+    { provide: TestExecutionDetailsService, useClass: DummyTestExecutionDetailsService },
+    { provide: ResourceService, useClass: DummyResourceService },
+    { provide: FileReaderProvider, useClass: DefaultFileReaderProvider }
   ],
   bootstrap: [AppComponent]
 })
