@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed, fakeAsync, tick, flush, flushMicrotasks } from '@angular/core/testing';
 
-import { TestExecDetailsComponent, FileReaderProvider } from './test-exec-details.component';
+import { TestExecDetailsComponent, FileReaderProvider, FileReaderLike } from './test-exec-details.component';
 import { PropertiesViewComponent } from '../properties/properties-view.component';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { MessagingModule, MessagingService } from '@testeditor/messaging-service';
@@ -9,7 +9,6 @@ import { TestExecutionDetailsService, DefaultTestExecutionDetailsService } from 
 import { TestExecutionDetails, DataKind } from '../details-service/test-execution-details.service';
 import { mock, instance, anything, verify, when } from 'ts-mockito';
 import { By } from '@angular/platform-browser';
-import { TestRunId } from './test-run-id';
 import { ResourceService, DefaultResourceService } from '../resource-service/resource.service';
 
 describe('TestExecDetailsComponent', () => {
@@ -18,13 +17,10 @@ describe('TestExecDetailsComponent', () => {
   let messagingService: MessagingService;
 
   const mockImage = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
-  const mockedTestExecDetailsService = mock(DefaultTestExecutionDetailsService);
-  const mockedResourceService = mock(DefaultResourceService);
-  const mockedFileReader = {
-    onload: () => ({} as any),
-    readAsDataURL: (blob: Blob) => mockedFileReader.onload(),
-    result: 'data:image/png;base64,' + mockImage
-  };
+  let mockedTestExecDetailsService: TestExecutionDetailsService;
+  let mockedResourceService: DefaultResourceService;
+  let mockedFileReader: FileReaderLike;
+
   const mockedFileReaderProvider: FileReaderProvider = {
     get: () => mockedFileReader
   };
@@ -73,6 +69,11 @@ DEBUG: Another log entry.`
   }];
 
   beforeEach(async(() => {
+    mockedTestExecDetailsService = mock(DefaultTestExecutionDetailsService);
+    mockedResourceService = mock(DefaultResourceService);
+    when(mockedResourceService.getBinaryResource(anything())).thenReturn(
+      Promise.resolve(b64toBlob(mockImage, 'image/png')));
+
     TestBed.configureTestingModule({
       declarations: [ TestExecDetailsComponent, PropertiesViewComponent ],
       imports: [ MessagingModule.forRoot(), TabsModule.forRoot() ],
@@ -86,6 +87,12 @@ DEBUG: Another log entry.`
   }));
 
   beforeEach(() => {
+    mockedFileReader = {
+      onload: () => ({} as any),
+      readAsDataURL: (blob: Blob) => mockedFileReader.onload(),
+      result: 'data:image/png;base64,' + mockImage
+    };
+
     fixture = TestBed.createComponent(TestExecDetailsComponent);
     messagingService = TestBed.get(MessagingService);
     component = fixture.componentInstance;
@@ -169,9 +176,6 @@ DEBUG: Another log entry.`
 
   it('sets image url in screenshot tab when retrieved details contain data of type "image"', fakeAsync(() => {
     // given
-    when(mockedResourceService.getBinaryResource(anything())).thenReturn(
-      Promise.resolve(b64toBlob(mockImage, 'image/png')));
-    // when(mockedFileReader.readAsDataURL(anything())).thenCall(mockedFileReader.onload);
     const imageURL = 'path/to/image.png';
     const selectionID = '42/1/2/23';
     setMockServiceResponse(selectionID, [{

@@ -8,12 +8,14 @@ import { TestRunId } from './test-run-id';
 import { ResourceService } from '../resource-service/resource.service';
 import { resource } from 'selenium-webdriver/http';
 
+export interface FileReaderLike {
+  onload: ((this: FileReaderLike| FileReader, ev?: FileReaderProgressEvent) => any) | null;
+  result: any;
+  readAsDataURL(blob: Blob): void;
+}
 
 export abstract class FileReaderProvider {
-  abstract get(): {
-    onload: ((this: FileReader, ev: FileReaderProgressEvent) => any) | null,
-    result: any,
-    readAsDataURL(blob: Blob): void};
+  abstract get(): FileReaderLike;
 }
 
 export class DefaultFileReaderProvider extends FileReaderProvider {
