@@ -69,6 +69,7 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
   }
 
   async updateDetails(id: string) {
+    this.isImageLoading = true;
     this.encodedScreenshot = '';
     this.properties = {};
     this.rawLog = '';
