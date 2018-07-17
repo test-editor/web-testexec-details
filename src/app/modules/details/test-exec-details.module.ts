@@ -1,6 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TestExecDetailsComponent } from './test-exec-details.component';
+import { TestExecDetailsComponent, FileReaderProvider, DefaultFileReaderProvider } from './test-exec-details.component';
 import { PropertiesViewModule } from '../properties/properties-view.module';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { DefaultTestExecutionDetailsService, TestExecutionDetailsService } from '../details-service/test-execution-details.service';
@@ -22,7 +22,8 @@ import { ResourceService, DefaultResourceService } from '../resource-service/res
   providers: [
     HttpProviderService,
     {provide: TestExecutionDetailsService, useClass: DefaultTestExecutionDetailsService},
-    {provide: ResourceService, useClass: DefaultResourceService}
+    {provide: ResourceService, useClass: DefaultResourceService},
+    { provide: FileReaderProvider, useClass: DefaultFileReaderProvider }
   ]
 })
 export class TestExecDetailsModule {

@@ -10,7 +10,6 @@ import { DummyTestExecutionDetailsService } from './dummy-test-execution-details
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ResourceService } from './modules/resource-service/resource.service';
 import { DummyResourceService } from './dummy-resource.service';
-import { FileReaderProvider, DefaultFileReaderProvider } from './modules/details/test-exec-details.component';
 
 @NgModule({
   declarations: [
@@ -25,8 +24,7 @@ import { FileReaderProvider, DefaultFileReaderProvider } from './modules/details
   providers: [
     HttpClient,
     { provide: TestExecutionDetailsService, useClass: DummyTestExecutionDetailsService },
-    { provide: ResourceService, useClass: DummyResourceService },
-    { provide: FileReaderProvider, useClass: DefaultFileReaderProvider }
+    { provide: ResourceService, useClass: DummyResourceService }
   ],
   bootstrap: [AppComponent]
 })
