@@ -6,6 +6,8 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { DefaultTestExecutionDetailsService, TestExecutionDetailsService } from '../details-service/test-execution-details.service';
 import { HttpProviderService } from '../http-provider-service/http-provider.service';
 import { TestExecutionDetailsServiceConfig } from '../details-service/test-execution-details-service-config';
+import { ResourceServiceConfig } from '../resource-service/resource-service-config';
+import { ResourceService, DefaultResourceService } from '../resource-service/resource.service';
 
 @NgModule({
   imports: [
@@ -19,14 +21,17 @@ import { TestExecutionDetailsServiceConfig } from '../details-service/test-execu
   ],
   providers: [
     HttpProviderService,
-    {provide: TestExecutionDetailsService, useClass: DefaultTestExecutionDetailsService}
+    {provide: TestExecutionDetailsService, useClass: DefaultTestExecutionDetailsService},
+    {provide: ResourceService, useClass: DefaultResourceService}
   ]
 })
 export class TestExecDetailsModule {
-  static forRoot(config: TestExecutionDetailsServiceConfig): ModuleWithProviders {
+  static forRoot(detailsServiceConfig: TestExecutionDetailsServiceConfig,
+    resourceServiceConfig: ResourceServiceConfig): ModuleWithProviders {
     return {
       ngModule: TestExecDetailsModule,
-      providers: [ { provide: TestExecutionDetailsServiceConfig, useValue: config } ]
+      providers: [ { provide: TestExecutionDetailsServiceConfig, useValue: detailsServiceConfig },
+                   { provide: ResourceServiceConfig, useValue: resourceServiceConfig } ]
     };
   }
 }

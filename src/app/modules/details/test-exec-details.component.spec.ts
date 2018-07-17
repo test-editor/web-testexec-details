@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, tick, flush, flushMicrotasks } from '@angular/core/testing';
 
-import { TestExecDetailsComponent } from './test-exec-details.component';
+import { TestExecDetailsComponent, FileReaderProvider, FileReaderLike } from './test-exec-details.component';
 import { PropertiesViewComponent } from '../properties/properties-view.component';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { MessagingModule, MessagingService } from '@testeditor/messaging-service';
@@ -9,13 +9,48 @@ import { TestExecutionDetailsService, DefaultTestExecutionDetailsService } from 
 import { TestExecutionDetails, DataKind } from '../details-service/test-execution-details.service';
 import { mock, instance, anything, verify, when } from 'ts-mockito';
 import { By } from '@angular/platform-browser';
-import { TestRunId } from './test-run-id';
+import { ResourceService, DefaultResourceService } from '../resource-service/resource.service';
 
 describe('TestExecDetailsComponent', () => {
   let component: TestExecDetailsComponent;
   let fixture: ComponentFixture<TestExecDetailsComponent>;
   let messagingService: MessagingService;
-  const mockedTestExecDetailsService = mock(DefaultTestExecutionDetailsService);
+
+  const mockImage = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
+  let mockedTestExecDetailsService: TestExecutionDetailsService;
+  let mockedResourceService: DefaultResourceService;
+  let mockedFileReader: FileReaderLike;
+
+  const mockedFileReaderProvider: FileReaderProvider = {
+    get: () => mockedFileReader
+  };
+
+  /**
+   * Used for a mocked response of the resource service.
+   * See https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
+   */
+  function b64toBlob(b64Data: any, contentType: string, sliceSize?: number): Blob {
+    contentType = contentType || '';
+    sliceSize = sliceSize || 512;
+
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+
+      const byteArray = new Uint8Array(byteNumbers);
+
+      byteArrays.push(byteArray);
+    }
+
+    return new Blob(byteArrays, {type: contentType});
+  }
 
   const sampleData = [{
     type: DataKind.text,
@@ -34,17 +69,30 @@ DEBUG: Another log entry.`
   }];
 
   beforeEach(async(() => {
+    mockedTestExecDetailsService = mock(DefaultTestExecutionDetailsService);
+    mockedResourceService = mock(DefaultResourceService);
+    when(mockedResourceService.getBinaryResource(anything())).thenReturn(
+      Promise.resolve(b64toBlob(mockImage, 'image/png')));
+
     TestBed.configureTestingModule({
       declarations: [ TestExecDetailsComponent, PropertiesViewComponent ],
       imports: [ MessagingModule.forRoot(), TabsModule.forRoot() ],
       providers: [
-        { provide: TestExecutionDetailsService, useValue: instance(mockedTestExecDetailsService)}
+        { provide: TestExecutionDetailsService, useValue: instance(mockedTestExecDetailsService)},
+        { provide: ResourceService, useValue: instance(mockedResourceService)},
+        { provide: FileReaderProvider, useValue: mockedFileReaderProvider}
       ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
+    mockedFileReader = {
+      onload: () => ({} as any),
+      readAsDataURL: (blob: Blob) => mockedFileReader.onload(),
+      result: 'data:image/png;base64,' + mockImage
+    };
+
     fixture = TestBed.createComponent(TestExecDetailsComponent);
     messagingService = TestBed.get(MessagingService);
     component = fixture.componentInstance;
@@ -91,8 +139,8 @@ DEBUG: Another log entry.`
 
     expect(console.log).toHaveBeenCalledWith('warning: received empty details data');
 
-    const image = fixture.debugElement.query(By.css('img'));
-    expect(image.properties.src).toEqual('');
+    const imageAlternative = fixture.debugElement.query(By.css('#no-screenshot')).nativeElement.innerHTML;
+    expect(imageAlternative).toEqual('No screenshot available.');
 
     const definitionList = fixture.debugElement.query(By.css('dl'));
     expect(definitionList).toBeFalsy();
@@ -128,7 +176,7 @@ DEBUG: Another log entry.`
 
   it('sets image url in screenshot tab when retrieved details contain data of type "image"', fakeAsync(() => {
     // given
-    const imageURL = 'http://testeditor.org/wp-content/uploads/2014/04/LogoTesteditor-e1403289032145.png';
+    const imageURL = 'path/to/image.png';
     const selectionID = '42/1/2/23';
     setMockServiceResponse(selectionID, [{
       type: DataKind.image,
@@ -140,8 +188,9 @@ DEBUG: Another log entry.`
     fixture.detectChanges();
 
     // then
-    const image = fixture.debugElement.query(By.css('img'));
-    expect(image.nativeElement.src).toEqual(imageURL);
+    const image = fixture.debugElement.query(By.css('#screenshot'));
+    const element = image.nativeElement;
+    expect(element.src).toEqual('data:image/png;base64,' + mockImage);
   }));
 
   it('displays log lines in the raw log tab when retrieved details contain data of type "text"', fakeAsync(() => {
@@ -179,8 +228,8 @@ DEBUG: Another log entry.`;
     const textArea = fixture.debugElement.query(By.css('textarea'));
     expect(textArea.nativeElement.innerHTML).toEqual(sampleData[1].content);
 
-    const image = fixture.debugElement.query(By.css('img'));
-    expect(image.nativeElement.src).toEqual(sampleData[3].content);
+    const image = fixture.debugElement.query(By.css('#screenshot'));
+    expect(image.nativeElement.src).toEqual('data:image/png;base64,' + mockImage);
 
     const definitionList = fixture.debugElement.query(By.css('dl'));
     expect(definitionList.children[0].children[0].nativeElement.innerText).toEqual('Status');
