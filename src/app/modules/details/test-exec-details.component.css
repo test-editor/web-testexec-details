@@ -1,0 +1,6 @@
+img {
+    max-width: calc(100% - 22px);
+    max-height: calc(100% - 22px);
+    margin: 10px;
+    border: 1px solid grey;
+}
