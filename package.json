@@ -1,6 +1,6 @@
 {
   "name": "@testeditor/testexec-details",
-  "version": "0.3.13",
+  "version": "0.3.14",
   "description": "Angular component providing a detailed view on test execution steps within test execution call hierarchies",
   "license": "EPL",
   "keywords": [
