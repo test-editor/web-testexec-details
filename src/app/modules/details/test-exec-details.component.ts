@@ -1,12 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MessagingService } from '@testeditor/messaging-service';
 import { ISubscription, Subscription } from 'rxjs/Subscription';
-import { Subject } from 'rxjs/Subject';
 import { TEST_NAVIGATION_SELECT } from '../event-types';
 import { TestExecutionDetailsService, DataKind } from '../details-service/test-execution-details.service';
-import { TestRunId } from './test-run-id';
 import { ResourceService } from '../resource-service/resource.service';
-import { resource } from 'selenium-webdriver/http';
+import { WindowService } from '@testeditor/testeditor-commons';
 
 export interface FileReaderLike {
   onload: ((this: FileReaderLike| FileReader, ev?: FileReaderProgressEvent) => any) | null;
@@ -53,7 +51,8 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
   constructor(private messagingService: MessagingService,
     private detailsService: TestExecutionDetailsService,
     private resourceService: ResourceService,
-    private fileReaderProvider: FileReaderProvider) {}
+    private fileReaderProvider: FileReaderProvider,
+    private windowReference: WindowService) {}
 
   ngOnInit() {
     this.subscription = this.messagingService.subscribe(TEST_NAVIGATION_SELECT, (id) => this.updateDetails(id));
@@ -66,6 +65,10 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+
+  onScreenshotClick(): void {
+    this.windowReference.open(() => Promise.resolve(new URL(this.encodedScreenshot)));
   }
 
   async updateDetails(id: string) {

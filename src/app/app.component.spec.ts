@@ -10,6 +10,7 @@ import { HttpProviderService } from './modules/http-provider-service/http-provid
 import { TestExecutionDetailsServiceConfig } from './modules/details-service/test-execution-details-service-config';
 import { DefaultResourceService, ResourceService } from './modules/resource-service/resource.service';
 import { mock, instance } from 'ts-mockito/lib/ts-mockito';
+import { WindowService, DefaultWindowService } from '@testeditor/testeditor-commons';
 
 describe('AppComponent', () => {
   const mockedResourceService = mock(DefaultResourceService);
@@ -26,6 +27,7 @@ describe('AppComponent', () => {
         { provide: TestExecutionDetailsService, useClass: DefaultTestExecutionDetailsService },
         { provide: ResourceService, useValue: instance(mockedResourceService)},
         { provide: FileReaderProvider, useClass: DefaultFileReaderProvider},
+        { provide: WindowService, useClass: DefaultWindowService },
         HttpProviderService,
         TestExecutionDetailsServiceConfig
       ]
