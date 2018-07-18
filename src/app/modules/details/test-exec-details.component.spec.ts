@@ -279,8 +279,8 @@ DEBUG: Another log entry.`;
     const textArea = fixture.debugElement.query(By.css('textarea'));
     expect(textArea.nativeElement.innerHTML).toEqual('');
 
-    const image = fixture.debugElement.query(By.css('img'));
-    expect(image.properties.src).toEqual('');
+    const imageAlternative = fixture.debugElement.query(By.css('#no-screenshot')).nativeElement.innerHTML;
+    expect(imageAlternative).toEqual('No screenshot available.');
 
     const definitionList = fixture.debugElement.query(By.css('dl'));
     expect(definitionList).toBeFalsy();
