@@ -8,6 +8,7 @@ import { HttpProviderService } from '../http-provider-service/http-provider.serv
 import { TestExecutionDetailsServiceConfig } from '../details-service/test-execution-details-service-config';
 import { ResourceServiceConfig } from '../resource-service/resource-service-config';
 import { ResourceService, DefaultResourceService } from '../resource-service/resource.service';
+import { DefaultWindowService, WindowService } from '@testeditor/testeditor-commons';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { ResourceService, DefaultResourceService } from '../resource-service/res
     HttpProviderService,
     {provide: TestExecutionDetailsService, useClass: DefaultTestExecutionDetailsService},
     {provide: ResourceService, useClass: DefaultResourceService},
-    { provide: FileReaderProvider, useClass: DefaultFileReaderProvider }
+    { provide: FileReaderProvider, useClass: DefaultFileReaderProvider },
+    { provide: WindowService, useClass: DefaultWindowService }
   ]
 })
 export class TestExecDetailsModule {

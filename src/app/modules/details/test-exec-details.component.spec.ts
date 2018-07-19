@@ -10,6 +10,7 @@ import { TestExecutionDetails, DataKind } from '../details-service/test-executio
 import { mock, instance, anything, verify, when } from 'ts-mockito';
 import { By } from '@angular/platform-browser';
 import { ResourceService, DefaultResourceService } from '../resource-service/resource.service';
+import { WindowService, DefaultWindowService } from '@testeditor/testeditor-commons';
 
 describe('TestExecDetailsComponent', () => {
   let component: TestExecDetailsComponent;
@@ -80,7 +81,8 @@ DEBUG: Another log entry.`
       providers: [
         { provide: TestExecutionDetailsService, useValue: instance(mockedTestExecDetailsService)},
         { provide: ResourceService, useValue: instance(mockedResourceService)},
-        { provide: FileReaderProvider, useValue: mockedFileReaderProvider}
+        { provide: FileReaderProvider, useValue: mockedFileReaderProvider},
+        { provide: WindowService, useClass: DefaultWindowService }
       ]
     })
     .compileComponents();
@@ -117,6 +119,7 @@ DEBUG: Another log entry.`
 
     // then
     verify(mockedTestExecDetailsService.getTestExecutionDetails(selectionID)).called();
+    expect().nothing();
   });
 
   it('resets details on receiving TEST_NAVIGATION_SELECT event when the payload is "null"', fakeAsync(() => {
