@@ -119,6 +119,7 @@ DEBUG: Another log entry.`
 
     // then
     verify(mockedTestExecDetailsService.getTestExecutionDetails(selectionID)).called();
+    expect().nothing();
   });
 
   it('resets details on receiving TEST_NAVIGATION_SELECT event when the payload is "null"', fakeAsync(() => {
