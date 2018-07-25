@@ -1,4 +1,4 @@
-<div>
+<div id="test-exec-details">
     <tabset>
         <tab heading="Test Step Details" id="properties-tab">
             <app-properties-view [model]="properties"></app-properties-view>
@@ -10,7 +10,7 @@
             </ng-template>
         </tab>
         <tab heading="Raw Log" id="log-tab">
-            <textarea>{{rawLog}}</textarea>
+            <textarea id="log-textarea">{{rawLog}}</textarea>
         </tab>
     </tabset>
 </div>
