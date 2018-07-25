@@ -52,7 +52,7 @@ describe('TestExecutionDetailsService', () => {
       method: 'GET',
       url: serviceConfig.url + '/42/1/2/23'
     };
-    const mockResponse: TestExecutionDetails[] = [{ type: DataKind.text, content: 'Hello World!' }];
+    const mockResponse: TestExecutionDetails[] = [{ type: DataKind.text, content: ['Hello World!', 'This can contain multiple lines.'] }];
 
     // when
     service.getTestExecutionDetails(id).
