@@ -1,20 +1,20 @@
-img {
+#screenshot, #log-textarea {
     max-width: calc(100% - 22px);
     max-height: calc(100% - 22px);
     margin: 10px;
     border: 1px solid grey;
+}
+
+#screenshot {
     cursor: pointer;
 }
 
-div#test-exec-details, tab#log-tab {
+div#test-exec-details, tab {
     height: 100%
 }
 
-textarea#log-textarea {
-    height: 100%;
-    width: 100%;
-    white-space: nowrap;
-    resize: none
+tab#properties-tab {
+    overflow: auto
 }
 
 :host ::ng-deep div.tab-content {
