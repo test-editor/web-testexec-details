@@ -58,8 +58,10 @@ describe('TestExecDetailsComponent', () => {
     content: 'this will be ignored / overwritten!'
   }, {
     type: DataKind.text,
-    content: `INFO: This is a log entry!
-DEBUG: Another log entry.`
+    content: [
+      'INFO: This is a log entry!',
+      'DEBUG: Another log entry.'
+    ]
   }, {
     type: DataKind.properties,
     content: {
@@ -229,7 +231,7 @@ DEBUG: Another log entry.`;
 
     // then
     const textArea = fixture.debugElement.query(By.css('textarea'));
-    expect(textArea.nativeElement.innerHTML).toEqual(sampleData[1].content);
+    expect(textArea.nativeElement.innerHTML).toEqual((sampleData[1].content as string[]).join('\n'));
 
     const image = fixture.debugElement.query(By.css('#screenshot'));
     expect(image.nativeElement.src).toEqual('data:image/png;base64,' + mockImage);

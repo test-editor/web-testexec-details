@@ -82,9 +82,14 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
         switch (entry.type) {
           case DataKind.image: this.getScreenshot(entry.content); break;
           case DataKind.properties: this.properties = entry.content; break;
-          case DataKind.text: this.rawLog = entry.content; break;
-        }
-      });
+          case DataKind.text:
+            if (Array.isArray(entry.content)) {
+              this.rawLog = entry.content.join('\n');
+            } else {
+              this.rawLog = entry.content;
+            }
+            break;
+      }});
     } else {
       console.log('warning: received empty details data');
     }
