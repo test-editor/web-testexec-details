@@ -9,10 +9,11 @@ import { TestExecutionDetailsServiceConfig } from '../details-service/test-execu
 import { ResourceServiceConfig } from '../resource-service/resource-service-config';
 import { ResourceService, DefaultResourceService } from '../resource-service/resource.service';
 import { DefaultWindowService, WindowService } from '@testeditor/testeditor-commons';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 @NgModule({
   imports: [
-    CommonModule, PropertiesViewModule, TabsModule.forRoot()
+    CommonModule, PropertiesViewModule, TabsModule.forRoot(), CarouselModule.forRoot()
   ],
   declarations: [
     TestExecDetailsComponent
