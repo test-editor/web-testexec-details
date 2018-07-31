@@ -150,7 +150,7 @@ describe('TestExecDetailsComponent', () => {
     const definitionList = fixture.debugElement.query(By.css('dl'));
     expect(definitionList).toBeFalsy();
 
-    const textArea = fixture.debugElement.query(By.css('textarea'));
+    const textArea = fixture.debugElement.query(By.css('#log-textarea'));
     expect(textArea.nativeElement.innerHTML).toEqual('');
   }));
 
@@ -215,7 +215,7 @@ DEBUG: Another log entry.`;
     fixture.detectChanges();
 
     // then
-    const textArea = fixture.debugElement.query(By.css('textarea'));
+    const textArea = fixture.debugElement.query(By.css('#log-textarea'));
     expect(textArea.nativeElement.innerHTML).toEqual(sampleLog);
   }));
 
@@ -230,7 +230,7 @@ DEBUG: Another log entry.`;
     fixture.detectChanges();
 
     // then
-    const textArea = fixture.debugElement.query(By.css('textarea'));
+    const textArea = fixture.debugElement.query(By.css('#log-textarea'));
     expect(textArea.nativeElement.innerHTML).toEqual((sampleData[1].content as string[]).join('\n'));
 
     const image = fixture.debugElement.query(By.css('#screenshot'));
@@ -257,7 +257,7 @@ DEBUG: Another log entry.`;
     fixture.detectChanges();
 
     // then
-    const textArea = fixture.debugElement.query(By.css('textarea'));
+    const textArea = fixture.debugElement.query(By.css('#log-textarea'));
     expect(textArea.nativeElement.innerHTML).toEqual(
       'log entry&lt;/textarea&gt;&lt;div id="BAD"&gt;&lt;p&gt;NOT ALLOWED&lt;/p&gt;&lt;/div&gt;');
     const illegalElement = fixture.debugElement.query(By.css('#BAD'));
@@ -281,7 +281,7 @@ DEBUG: Another log entry.`;
     fixture.detectChanges();
 
     // then
-    const textArea = fixture.debugElement.query(By.css('textarea'));
+    const textArea = fixture.debugElement.query(By.css('#log-textarea'));
     expect(textArea.nativeElement.innerHTML).toEqual('');
 
     const imageAlternative = fixture.debugElement.query(By.css('#no-screenshot')).nativeElement.innerHTML;
