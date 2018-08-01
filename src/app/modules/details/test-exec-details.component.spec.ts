@@ -11,6 +11,7 @@ import { mock, instance, anything, verify, when } from 'ts-mockito';
 import { By } from '@angular/platform-browser';
 import { ResourceService, DefaultResourceService } from '../resource-service/resource.service';
 import { WindowService, DefaultWindowService } from '@testeditor/testeditor-commons';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 describe('TestExecDetailsComponent', () => {
   let component: TestExecDetailsComponent;
@@ -79,7 +80,7 @@ describe('TestExecDetailsComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [ TestExecDetailsComponent, PropertiesViewComponent ],
-      imports: [ MessagingModule.forRoot(), TabsModule.forRoot() ],
+      imports: [ MessagingModule.forRoot(), TabsModule.forRoot(), CarouselModule.forRoot() ],
       providers: [
         { provide: TestExecutionDetailsService, useValue: instance(mockedTestExecDetailsService)},
         { provide: ResourceService, useValue: instance(mockedResourceService)},
@@ -145,7 +146,7 @@ describe('TestExecDetailsComponent', () => {
     expect(console.log).toHaveBeenCalledWith('warning: received empty details data');
 
     const imageAlternative = fixture.debugElement.query(By.css('#no-screenshot')).nativeElement.innerHTML;
-    expect(imageAlternative).toEqual('No screenshot available.');
+    expect(imageAlternative).toEqual('No screenshots available.');
 
     const definitionList = fixture.debugElement.query(By.css('dl'));
     expect(definitionList).toBeFalsy();
@@ -193,7 +194,7 @@ describe('TestExecDetailsComponent', () => {
     fixture.detectChanges();
 
     // then
-    const image = fixture.debugElement.query(By.css('#screenshot'));
+    const image = fixture.debugElement.query(By.css('.screenshot'));
     const element = image.nativeElement;
     expect(element.src).toEqual('data:image/png;base64,' + mockImage);
   }));
@@ -233,7 +234,7 @@ DEBUG: Another log entry.`;
     const textArea = fixture.debugElement.query(By.css('#log-textarea'));
     expect(textArea.nativeElement.innerHTML).toEqual((sampleData[1].content as string[]).join('\n'));
 
-    const image = fixture.debugElement.query(By.css('#screenshot'));
+    const image = fixture.debugElement.query(By.css('.screenshot'));
     expect(image.nativeElement.src).toEqual('data:image/png;base64,' + mockImage);
 
     const definitionList = fixture.debugElement.query(By.css('dl'));
@@ -285,11 +286,12 @@ DEBUG: Another log entry.`;
     expect(textArea.nativeElement.innerHTML).toEqual('');
 
     const imageAlternative = fixture.debugElement.query(By.css('#no-screenshot')).nativeElement.innerHTML;
-    expect(imageAlternative).toEqual('No screenshot available.');
+    expect(imageAlternative).toEqual('No screenshots available.');
 
     const definitionList = fixture.debugElement.query(By.css('dl'));
     expect(definitionList).toBeFalsy();
 
+    flush();
   }));
 
 });

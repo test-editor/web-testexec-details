@@ -7,7 +7,7 @@ import { ResourceService } from '../resource-service/resource.service';
 import { WindowService } from '@testeditor/testeditor-commons';
 
 export interface FileReaderLike {
-  onload: ((this: FileReaderLike| FileReader, ev?: FileReaderProgressEvent) => any) | null;
+  onload: ((this: FileReaderLike | FileReader, ev?: FileReaderProgressEvent) => any) | null;
   result: any;
   readAsDataURL(blob: Blob): void;
 }
@@ -31,28 +31,17 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
 
   private properties: any = {};
   private rawLog = '';
-  private encodedScreenshot = '';
-  private isImageLoading = true;
+  private encodedScreenshots = new Array(0);
+  private showImages = false;
+  private imagesRemainingToLoad = 0;
 
   private subscription: Subscription;
-
-  private getScreenshot(path: string) {
-      this.isImageLoading = true;
-      this.resourceService.getBinaryResource(path).then((screenshot: Blob) => {
-        console.log(`retrieved screenshot ${screenshot}`);
-        this.createImageFromBlob(screenshot);
-        this.isImageLoading = false;
-      }, error => {
-        console.log(error);
-        this.isImageLoading = false;
-      });
-  }
 
   constructor(private messagingService: MessagingService,
     private detailsService: TestExecutionDetailsService,
     private resourceService: ResourceService,
     private fileReaderProvider: FileReaderProvider,
-    private windowReference: WindowService) {}
+    private windowReference: WindowService) { }
 
   ngOnInit() {
     this.subscription = this.messagingService.subscribe(TEST_NAVIGATION_SELECT, (id) => this.updateDetails(id));
@@ -67,20 +56,29 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onScreenshotClick(): void {
-    this.windowReference.open(() => Promise.resolve(new URL(this.encodedScreenshot)));
+  // Needed to iterate the screenshots in proper order from within this component's template.
+  // The screenshots are retrieved from the server asynchronously and stored in an array, so
+  // the order of retrieval is not guaranteed to be the same as the original order as given
+  // by the associated index.
+  get screenshotIndices() {
+    return Array.from(Array(this.encodedScreenshots.length).keys());
   }
 
-  async updateDetails(id: string) {
-    this.isImageLoading = true;
-    this.encodedScreenshot = '';
+  onScreenshotClick(index: number): void {
+    this.windowReference.open(() => Promise.resolve(new URL(this.encodedScreenshots[index])));
+  }
+
+  async updateDetails(id: string): Promise<void> {
+    this.showImages = false;
+    this.encodedScreenshots = new Array();
     this.properties = {};
     this.rawLog = '';
     const details = await this.detailsService.getTestExecutionDetails(id);
     if (details) {
+      const screenshotPaths: string[] = [];
       details.forEach((entry) => {
         switch (entry.type) {
-          case DataKind.image: this.getScreenshot(entry.content); break;
+          case DataKind.image: screenshotPaths.push(entry.content); break;
           case DataKind.properties: this.properties = entry.content; break;
           case DataKind.text:
             if (Array.isArray(entry.content)) {
@@ -89,22 +87,39 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
               this.rawLog = entry.content;
             }
             break;
-      }});
+        }
+      });
+      this.imagesRemainingToLoad = screenshotPaths.length;
+      screenshotPaths.forEach((path, index) => this.getScreenshot(path, index));
     } else {
       console.log('warning: received empty details data');
     }
   }
 
-  private createImageFromBlob(image: Blob) {
+  private getScreenshot(path: string, index: number) {
+    this.showImages = false;
+    this.resourceService.getBinaryResource(path).then((screenshot: Blob) => {
+      console.log(`retrieved screenshot ${screenshot}`);
+      this.createImageFromBlob(screenshot, index);
+    }, error => {
+      console.log(error);
+      this.showImages = false;
+    });
+  }
+
+  private createImageFromBlob(image: Blob, index: number) {
     const reader = this.fileReaderProvider.get();
     reader.onload = () => {
-       this.encodedScreenshot = reader.result;
-       console.log('screenshot was set');
+      this.encodedScreenshots[index] = reader.result;
+      this.imagesRemainingToLoad--;
+      if (this.imagesRemainingToLoad <= 0) {
+        this.showImages = true;
+      }
     };
 
     if (image) {
-       reader.readAsDataURL(image);
+      reader.readAsDataURL(image);
     }
-}
+  }
 
 }

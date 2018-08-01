@@ -11,6 +11,7 @@ import { TestExecutionDetailsServiceConfig } from './modules/details-service/tes
 import { DefaultResourceService, ResourceService } from './modules/resource-service/resource.service';
 import { mock, instance } from 'ts-mockito/lib/ts-mockito';
 import { WindowService, DefaultWindowService } from '@testeditor/testeditor-commons';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 describe('AppComponent', () => {
   const mockedResourceService = mock(DefaultResourceService);
@@ -22,7 +23,7 @@ describe('AppComponent', () => {
         TestExecDetailsComponent,
         PropertiesViewComponent
       ],
-      imports: [ TabsModule.forRoot(), MessagingModule.forRoot() ],
+      imports: [ TabsModule.forRoot(), MessagingModule.forRoot(), CarouselModule.forRoot() ],
       providers: [
         { provide: TestExecutionDetailsService, useClass: DefaultTestExecutionDetailsService },
         { provide: ResourceService, useValue: instance(mockedResourceService)},

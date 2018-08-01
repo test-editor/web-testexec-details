@@ -16,6 +16,12 @@ export class DummyTestExecutionDetailsService extends TestExecutionDetailsServic
           }, {
             type: DataKind.image,
             content: 'http://testeditor.org/wp-content/uploads/2014/04/LogoTesteditor-e1403289032145.png'
+          }, {
+            type: DataKind.image,
+            content: 'http://testeditor.org/wp-content/uploads/2014/04/LogoTesteditor-e1403289032145.png'
+          }, {
+            type: DataKind.image,
+            content: 'http://testeditor.org/wp-content/uploads/2014/04/LogoTesteditor-e1403289032145.png'
           }]);
     }
   }

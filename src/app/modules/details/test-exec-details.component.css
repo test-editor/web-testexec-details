@@ -1,12 +1,18 @@
-#screenshot, #log-textarea {
+.screenshot, #log-textarea {
     max-width: calc(100% - 22px);
     max-height: calc(100% - 22px);
     margin: 10px;
     border: 1px solid grey;
 }
 
-#screenshot {
+.screenshot {
     cursor: pointer;
+}
+
+.screenshot-label {
+    color: gray;
+    text-shadow:  2px 2px lightgray;
+
 }
 
 div#test-exec-details, tab {
@@ -19,4 +25,16 @@ tab#properties-tab {
 
 :host ::ng-deep div.tab-content {
     height: calc(100% - 42px)
+}
+
+:host ::ng-deep .carousel-control-prev-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23808080' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E") !important;
+}
+
+:host ::ng-deep .carousel-control-next-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23808080' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
+}
+
+:host ::ng-deep .carousel-inner, :host ::ng-deep .carousel, :host ::ng-deep .carousel-item, :host ::ng-deep .carousel-item .item {
+    height: 100%;
 }

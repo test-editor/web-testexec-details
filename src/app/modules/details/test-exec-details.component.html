@@ -4,9 +4,16 @@
             <app-properties-view [model]="properties"></app-properties-view>
         </tab>
         <tab heading="Screenshot" id="screenshot-tab">
-            <img id='screenshot' (click)="onScreenshotClick()" [src]="encodedScreenshot" alt="screenshot" *ngIf="!isImageLoading; else noImageFound">
+            <carousel [noWrap]="true" [showIndicators]="false" [interval]="0" *ngIf="showImages; else noImageFound">
+                <slide *ngFor="let i of screenshotIndices">
+                    <img class="screenshot" [id]="'screenshot-'+i" (click)="onScreenshotClick(i)" [src]="encodedScreenshots[i]" alt="screenshot" >
+                    <div class="carousel-caption d-none d-md-block" *ngIf="encodedScreenshots.length > 1">
+                        <p class="screenshot-label" [id]="'screenshot-label-'+i">{{i+1}}/{{encodedScreenshots.length}}</p>
+                    </div>
+                </slide>
+            </carousel>
             <ng-template #noImageFound>
-                <p id='no-screenshot'>No screenshot available.</p>
+                <p id='no-screenshot'>No screenshots available.</p>
             </ng-template>
         </tab>
         <tab heading="Raw Log" id="log-tab">
