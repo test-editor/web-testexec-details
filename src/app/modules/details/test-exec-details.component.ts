@@ -22,15 +22,6 @@ export class DefaultFileReaderProvider extends FileReaderProvider {
   }
 }
 
-export class OrderedMapIterator<T> implements Iterator<T> {
-  private currentIndex = 0;
-  constructor(private orderedMap: Map<number, T>) { }
-  next(): IteratorResult<T> {
-    return { done: (this.currentIndex < this.orderedMap.size),
-      value: this.orderedMap.get(this.currentIndex++) };
-  }
-}
-
 @Component({
   selector: 'app-test-exec-details',
   templateUrl: './test-exec-details.component.html',
@@ -65,6 +56,10 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Needed to iterate the screenshots in proper order from within this component's template.
+  // The screenshots are retrieved from the server asynchronously and stored in an array, so
+  // the order of retrieval is not guaranteed to be the same as the original order as given
+  // by the associated index.
   get screenshotIndices() {
     return Array.from(Array(this.encodedScreenshots.length).keys());
   }
@@ -73,7 +68,7 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
     this.windowReference.open(() => Promise.resolve(new URL(this.encodedScreenshots[index])));
   }
 
-  async updateDetails(id: string) {
+  async updateDetails(id: string): Promise<void> {
     this.showImages = false;
     this.encodedScreenshots = new Array();
     this.properties = {};
@@ -95,7 +90,6 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
         }
       });
       this.imagesRemainingToLoad = screenshotPaths.length;
-      this.encodedScreenshots = [...Array(screenshotPaths.length)];
       screenshotPaths.forEach((path, index) => this.getScreenshot(path, index));
     } else {
       console.log('warning: received empty details data');
@@ -118,7 +112,6 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
     reader.onload = () => {
       this.encodedScreenshots[index] = reader.result;
       this.imagesRemainingToLoad--;
-      console.log('screenshot was added');
       if (this.imagesRemainingToLoad <= 0) {
         this.showImages = true;
       }
