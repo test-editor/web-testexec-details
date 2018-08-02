@@ -20,3 +20,7 @@ p.error {
     color: red;
     font-weight: bold
 }
+
+.even-property-row {
+    background-color: whitesmoke;
+}
