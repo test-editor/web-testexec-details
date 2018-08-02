@@ -9,11 +9,11 @@ describe('testexec-details App', () => {
 
   it('should display welcome message', () => {
     page.navigateTo();
-    expect(page.getPropertyName(1)).toEqual('Type');
-    expect(page.getPropertyName(2)).toEqual('Execution Time');
-    expect(page.getPropertyName(3)).toEqual('Status');
-    expect(page.getPropertyValue(1)).toEqual('Test Step');
-    expect(page.getPropertyValue(2)).toEqual('4.2 seconds');
-    expect(page.getPropertyValue(3)).toEqual('OK');
+    expect(page.findElementContainingText('Type')).toBeTruthy();
+    expect(page.findElementContainingText('ID')).toBeTruthy();
+    expect(page.findElementContainingText('Duration')).toBeTruthy();
+    expect(page.findElementContainingText('Test Step')).toBeTruthy();
+    expect(page.findElementContainingText('15 h 23 min 42.333 s')).toBeTruthy();
+    expect(page.findElementContainingText('OK')).toBeTruthy();
   });
 });

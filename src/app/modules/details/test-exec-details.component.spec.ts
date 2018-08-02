@@ -12,6 +12,8 @@ import { By } from '@angular/platform-browser';
 import { ResourceService, DefaultResourceService } from '../resource-service/resource.service';
 import { WindowService, DefaultWindowService } from '@testeditor/testeditor-commons';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { PropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
+import { TestPropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
 
 describe('TestExecDetailsComponent', () => {
   let component: TestExecDetailsComponent;
@@ -85,7 +87,8 @@ describe('TestExecDetailsComponent', () => {
         { provide: TestExecutionDetailsService, useValue: instance(mockedTestExecDetailsService)},
         { provide: ResourceService, useValue: instance(mockedResourceService)},
         { provide: FileReaderProvider, useValue: mockedFileReaderProvider},
-        { provide: WindowService, useClass: DefaultWindowService }
+        { provide: WindowService, useClass: DefaultWindowService },
+        { provide: PropertiesPrettifierService, useClass: TestPropertiesPrettifierService },
       ]
     })
     .compileComponents();

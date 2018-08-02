@@ -5,6 +5,7 @@ import { TEST_NAVIGATION_SELECT } from '../event-types';
 import { TestExecutionDetailsService, DataKind } from '../details-service/test-execution-details.service';
 import { ResourceService } from '../resource-service/resource.service';
 import { WindowService } from '@testeditor/testeditor-commons';
+import { PropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
 
 export interface FileReaderLike {
   onload: ((this: FileReaderLike | FileReader, ev?: FileReaderProgressEvent) => any) | null;
@@ -41,7 +42,8 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
     private detailsService: TestExecutionDetailsService,
     private resourceService: ResourceService,
     private fileReaderProvider: FileReaderProvider,
-    private windowReference: WindowService) { }
+    private windowReference: WindowService,
+    private propertiesPrettifier: PropertiesPrettifierService<object>) { }
 
   ngOnInit() {
     this.subscription = this.messagingService.subscribe(TEST_NAVIGATION_SELECT, (id) => this.updateDetails(id));
@@ -79,7 +81,7 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
       details.forEach((entry) => {
         switch (entry.type) {
           case DataKind.image: screenshotPaths.push(entry.content); break;
-          case DataKind.properties: this.properties = entry.content; break;
+          case DataKind.properties: this.properties = this.propertiesPrettifier.prettify(entry.content); break;
           case DataKind.text:
             if (Array.isArray(entry.content)) {
               this.rawLog = entry.content.join('\n');

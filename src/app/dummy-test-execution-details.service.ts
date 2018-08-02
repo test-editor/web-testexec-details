@@ -6,9 +6,19 @@ export class DummyTestExecutionDetailsService extends TestExecutionDetailsServic
         return Promise.resolve([{
           type: DataKind.properties,
           content: {
-            'Type': 'Test Step',
-            'Execution Time': '4.2 seconds',
-            'Status': 'OK'
+            'type': 'Test Step',
+            'ID': 'ID42',
+            'enter': '54123321123456',  /* timestamps in nanoseconds.     */
+            'leave': '109545654567890', /* duration: 15 h 23 min 42.333 s */
+            'status': 'OK',
+            'preVariables': {
+              'foo': '23'
+            },
+            'postVariables': {
+              'bar': '42'
+            },
+            'emptyFieldsShouldBeFiltered': '',
+            'soShouldNullFields': null
           }
         }, {
             type: DataKind.text,

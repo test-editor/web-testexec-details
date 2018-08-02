@@ -10,6 +10,8 @@ import { ResourceServiceConfig } from '../resource-service/resource-service-conf
 import { ResourceService, DefaultResourceService } from '../resource-service/resource.service';
 import { DefaultWindowService, WindowService } from '@testeditor/testeditor-commons';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { PropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
+import { TestPropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
 
 @NgModule({
   imports: [
@@ -26,7 +28,8 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
     {provide: TestExecutionDetailsService, useClass: DefaultTestExecutionDetailsService},
     {provide: ResourceService, useClass: DefaultResourceService},
     { provide: FileReaderProvider, useClass: DefaultFileReaderProvider },
-    { provide: WindowService, useClass: DefaultWindowService }
+    { provide: WindowService, useClass: DefaultWindowService },
+    { provide: PropertiesPrettifierService, useClass: TestPropertiesPrettifierService }
   ]
 })
 export class TestExecDetailsModule {
