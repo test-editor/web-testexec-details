@@ -238,6 +238,20 @@ describe('TestPropertiesPrettifierService', () => {
       expect(actualResult['Duration']).toEqual('15 h 23 min 42.333 s');
     }));
 
+    it('outputs a bracketed warning instead of a duration if the "leave" property is missing',
+    inject([PropertiesPrettifierService], (service: PropertiesPrettifierService<object>) => {
+      // given
+      const properties = {
+        'enter':  '1000'
+      };
+
+      // when
+      const actualResult = service.prettify(properties);
+
+      // then
+      expect(actualResult['Duration']).toEqual('<faulty data: missing "leave" timestamp>');
+    }));
+
     it('outputs a bracketed warning instead of a duration if the duration would be negative',
     inject([PropertiesPrettifierService], (service: PropertiesPrettifierService<object>) => {
       // given

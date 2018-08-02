@@ -36,16 +36,19 @@ export class TestPropertiesPrettifierService implements PropertiesPrettifierServ
   }
 
   startAndFinishTimeToDuration(properties: object): object {
-    if (properties[this.START_KEY] && properties[this.FINISH_KEY]) {
-      const nanosecondDuration = properties[this.FINISH_KEY] - properties[this.START_KEY];
-      if (nanosecondDuration < 0) {
-        properties[this.DURATION_KEY] = '<faulty data: negative duration>';
+    if (properties[this.START_KEY]) {
+      if (properties[this.FINISH_KEY]) {
+        const nanosecondDuration = properties[this.FINISH_KEY] - properties[this.START_KEY];
+        if (nanosecondDuration < 0) {
+          properties[this.DURATION_KEY] = '<faulty data: negative duration>';
+        } else {
+          properties[this.DURATION_KEY] = this.formatNanoseconds(nanosecondDuration);
+        }
+        delete properties[this.FINISH_KEY];
       } else {
-        properties[this.DURATION_KEY] = this.formatNanoseconds(nanosecondDuration);
+        properties[this.DURATION_KEY] = '<faulty data: missing "leave" timestamp>';
       }
-
       delete properties[this.START_KEY];
-      delete properties[this.FINISH_KEY];
     }
 
     return properties;
