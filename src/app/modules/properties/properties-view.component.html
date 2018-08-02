@@ -1,6 +1,6 @@
 <div *ngIf="isModelValid() else modelInvalidBlock">
 <dl *ngIf="propertyNames().length > 0">
-  <div *ngFor="let propertyName of propertyNames()">
+  <div *ngFor="let propertyName of propertyNames(); let even = even; let odd = odd" [ngClass]="{'even-property-row':even}">
     <dt>{{propertyName}}</dt><dd>{{propertyValue(propertyName)}}&nbsp;</dd>
   </div>
 </dl>

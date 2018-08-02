@@ -12,6 +12,8 @@ import { DefaultResourceService, ResourceService } from './modules/resource-serv
 import { mock, instance } from 'ts-mockito/lib/ts-mockito';
 import { WindowService, DefaultWindowService } from '@testeditor/testeditor-commons';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { PropertiesPrettifierService } from './modules/test-properties-prettifier/test-properties-prettifier.service';
+import { TestPropertiesPrettifierService } from './modules/test-properties-prettifier/test-properties-prettifier.service';
 
 describe('AppComponent', () => {
   const mockedResourceService = mock(DefaultResourceService);
@@ -29,6 +31,7 @@ describe('AppComponent', () => {
         { provide: ResourceService, useValue: instance(mockedResourceService)},
         { provide: FileReaderProvider, useClass: DefaultFileReaderProvider},
         { provide: WindowService, useClass: DefaultWindowService },
+        { provide: PropertiesPrettifierService, useClass: TestPropertiesPrettifierService },
         HttpProviderService,
         TestExecutionDetailsServiceConfig
       ]
