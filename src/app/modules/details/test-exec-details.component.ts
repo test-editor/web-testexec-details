@@ -29,15 +29,13 @@ export class DefaultFileReaderProvider extends FileReaderProvider {
   styleUrls: ['./test-exec-details.component.css']
 })
 export class TestExecDetailsComponent implements OnInit, OnDestroy {
-
-  private properties: any = {};
-  private rawLog = '';
   private encodedScreenshots = new Array(0);
-  private showImages = false;
   private imagesRemainingToLoad = 0;
-
   private subscription: Subscription;
 
+  public properties: any = {};
+  public rawLog = '';
+  public showImages = false;
   constructor(private messagingService: MessagingService,
     private detailsService: TestExecutionDetailsService,
     private resourceService: ResourceService,
