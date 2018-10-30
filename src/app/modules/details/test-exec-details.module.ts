@@ -1,21 +1,23 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TestExecDetailsComponent, FileReaderProvider, DefaultFileReaderProvider } from './test-exec-details.component';
-import { PropertiesViewModule } from '../properties/properties-view.module';
+import { ModuleWithProviders, NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { DefaultWindowService, WindowService } from '@testeditor/testeditor-commons';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { TestExecutionDetailsServiceConfig } from '../details-service/test-execution-details-service-config';
 import { DefaultTestExecutionDetailsService, TestExecutionDetailsService } from '../details-service/test-execution-details.service';
 import { HttpProviderService } from '../http-provider-service/http-provider.service';
-import { TestExecutionDetailsServiceConfig } from '../details-service/test-execution-details-service-config';
+import { PropertiesViewModule } from '../properties/properties-view.module';
 import { ResourceServiceConfig } from '../resource-service/resource-service-config';
-import { ResourceService, DefaultResourceService } from '../resource-service/resource.service';
-import { DefaultWindowService, WindowService } from '@testeditor/testeditor-commons';
-import { CarouselModule } from 'ngx-bootstrap/carousel';
-import { PropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
-import { TestPropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
+import { DefaultResourceService, ResourceService } from '../resource-service/resource.service';
+import { PropertiesPrettifierService,
+  TestPropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
+import { DefaultFileReaderProvider, FileReaderProvider, TestExecDetailsComponent } from './test-exec-details.component';
 
 @NgModule({
   imports: [
-    CommonModule, PropertiesViewModule, TabsModule.forRoot(), CarouselModule.forRoot()
+    CommonModule, PropertiesViewModule, TabsModule.forRoot(), CarouselModule.forRoot(), FormsModule, ButtonsModule.forRoot()
   ],
   declarations: [
     TestExecDetailsComponent

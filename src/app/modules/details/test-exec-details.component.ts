@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MessagingService } from '@testeditor/messaging-service';
-import { ISubscription, Subscription } from 'rxjs/Subscription';
-import { TEST_NAVIGATION_SELECT } from '../event-types';
-import { TestExecutionDetailsService, DataKind } from '../details-service/test-execution-details.service';
-import { ResourceService } from '../resource-service/resource.service';
 import { WindowService } from '@testeditor/testeditor-commons';
+import { Subscription } from 'rxjs/Subscription';
+import { DataKind, LogLevel, TestExecutionDetailsService } from '../details-service/test-execution-details.service';
+import { TEST_NAVIGATION_SELECT } from '../event-types';
+import { ResourceService } from '../resource-service/resource.service';
 import { PropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
 
 export interface FileReaderLike {
@@ -35,7 +35,9 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
 
   public properties: any = {};
   public rawLog = '';
+  public logLevel: LogLevel.INFO | LogLevel.DEBUG | LogLevel.TRACE = LogLevel.INFO;
   public showImages = false;
+
   constructor(private messagingService: MessagingService,
     private detailsService: TestExecutionDetailsService,
     private resourceService: ResourceService,

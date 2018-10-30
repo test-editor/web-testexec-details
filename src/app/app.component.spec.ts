@@ -1,19 +1,21 @@
-import { TestBed, async } from '@angular/core/testing';
-import { AppComponent } from './app.component';
-import { TestExecDetailsComponent, FileReaderProvider, DefaultFileReaderProvider } from './modules/details/test-exec-details.component';
-import { PropertiesViewComponent } from './modules/properties/properties-view.component';
+import { async, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { TabsModule } from 'ngx-bootstrap/tabs';
 import { MessagingModule } from '@testeditor/messaging-service';
-import { DefaultTestExecutionDetailsService, TestExecutionDetailsService } from './modules/details-service/test-execution-details.service';
-import { HttpProviderService } from './modules/http-provider-service/http-provider.service';
-import { TestExecutionDetailsServiceConfig } from './modules/details-service/test-execution-details-service-config';
-import { DefaultResourceService, ResourceService } from './modules/resource-service/resource.service';
-import { mock, instance } from 'ts-mockito/lib/ts-mockito';
-import { WindowService, DefaultWindowService } from '@testeditor/testeditor-commons';
+import { DefaultWindowService, WindowService } from '@testeditor/testeditor-commons';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
-import { PropertiesPrettifierService } from './modules/test-properties-prettifier/test-properties-prettifier.service';
-import { TestPropertiesPrettifierService } from './modules/test-properties-prettifier/test-properties-prettifier.service';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { instance, mock } from 'ts-mockito/lib/ts-mockito';
+import { AppComponent } from './app.component';
+import { TestExecutionDetailsServiceConfig } from './modules/details-service/test-execution-details-service-config';
+import { DefaultTestExecutionDetailsService, TestExecutionDetailsService } from './modules/details-service/test-execution-details.service';
+import { DefaultFileReaderProvider, FileReaderProvider, TestExecDetailsComponent } from './modules/details/test-exec-details.component';
+import { HttpProviderService } from './modules/http-provider-service/http-provider.service';
+import { PropertiesViewComponent } from './modules/properties/properties-view.component';
+import { DefaultResourceService, ResourceService } from './modules/resource-service/resource.service';
+import { PropertiesPrettifierService,
+  TestPropertiesPrettifierService } from './modules/test-properties-prettifier/test-properties-prettifier.service';
 
 describe('AppComponent', () => {
   const mockedResourceService = mock(DefaultResourceService);
@@ -25,7 +27,7 @@ describe('AppComponent', () => {
         TestExecDetailsComponent,
         PropertiesViewComponent
       ],
-      imports: [ TabsModule.forRoot(), MessagingModule.forRoot(), CarouselModule.forRoot() ],
+      imports: [ TabsModule.forRoot(), MessagingModule.forRoot(), CarouselModule.forRoot(), FormsModule, ButtonsModule.forRoot() ],
       providers: [
         { provide: TestExecutionDetailsService, useClass: DefaultTestExecutionDetailsService },
         { provide: ResourceService, useValue: instance(mockedResourceService)},

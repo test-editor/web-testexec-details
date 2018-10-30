@@ -1,3 +1,7 @@
+.flex-container {
+    display: flex
+}
+
 .screenshot, #log-textarea {
     max-width: calc(100% - 22px);
     max-height: calc(100% - 22px);
@@ -23,6 +27,14 @@ tab#properties-tab {
     overflow: auto
 }
 
+#log-textarea {
+    flex-grow: 1
+}
+
+label.btn {
+    margin-bottom: 0
+}
+
 :host ::ng-deep div.tab-content {
     height: calc(100% - 42px)
 }
@@ -38,3 +50,8 @@ tab#properties-tab {
 :host ::ng-deep .carousel-inner, :host ::ng-deep .carousel, :host ::ng-deep .carousel-item, :host ::ng-deep .carousel-item .item {
     height: 100%;
 }
+
+.two-bars:before {
+    font-weight: bolder;
+    content: "\ff1d";
+  }
