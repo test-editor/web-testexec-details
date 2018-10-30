@@ -110,8 +110,8 @@ describe('TestExecDetailsComponent', () => {
     fixture.detectChanges();
   });
 
-  function setMockServiceResponse(id: string, details: TestExecutionDetails[]): void {
-    when(mockedTestExecDetailsService.getTestExecutionDetails(id ? id : anything()))
+  function setMockServiceResponse(id: string, details: TestExecutionDetails[], logLevel: LogLevel): void {
+      when(mockedTestExecDetailsService.getTestExecutionDetails(id ? id : anything(), logLevel))
       .thenReturn(Promise.resolve(details));
   }
 
@@ -127,14 +127,14 @@ describe('TestExecDetailsComponent', () => {
     messagingService.publish(TEST_NAVIGATION_SELECT, selectionID);
 
     // then
-    verify(mockedTestExecDetailsService.getTestExecutionDetails(selectionID)).called();
+    verify(mockedTestExecDetailsService.getTestExecutionDetails(selectionID, component.logLevel)).called();
     expect().nothing();
   });
 
   it('resets details on receiving TEST_NAVIGATION_SELECT event when the payload is "null"', fakeAsync(() => {
     // given
     const selectionID = '42/1/2/23';
-    setMockServiceResponse(selectionID, null);
+    setMockServiceResponse(selectionID, null, component.logLevel);
     console.log = jasmine.createSpy('log');
 
     // when
@@ -170,7 +170,7 @@ describe('TestExecDetailsComponent', () => {
         'Execution Time': '3.14159 seconds',
         'Status': 'OK'
       }
-    }]);
+    }], component.logLevel);
 
     // when
     messagingService.publish(TEST_NAVIGATION_SELECT, selectionID);
@@ -194,7 +194,7 @@ describe('TestExecDetailsComponent', () => {
     setMockServiceResponse(selectionID, [{
       type: DataKind.image,
       content: imageURL
-    }]);
+    }], component.logLevel);
 
     // when
     messagingService.publish(TEST_NAVIGATION_SELECT, selectionID);
@@ -217,7 +217,7 @@ DEBUG: Another log entry.`;
     setMockServiceResponse(selectionID, [{
       type: DataKind.text,
       content: sampleLog
-    }]);
+    }], component.logLevel);
 
     // when
     messagingService.publish(TEST_NAVIGATION_SELECT, selectionID);
@@ -232,7 +232,7 @@ DEBUG: Another log entry.`;
   it('fills all tabs with retrieved details data', fakeAsync(() => {
     // given
     const selectionID = '42/1/2/23';
-    setMockServiceResponse(selectionID, sampleData);
+    setMockServiceResponse(selectionID, sampleData, component.logLevel);
 
     // when
     messagingService.publish(TEST_NAVIGATION_SELECT, selectionID);
@@ -260,7 +260,7 @@ DEBUG: Another log entry.`;
     setMockServiceResponse(selectionID, [{
       type: DataKind.text,
       content: sampleLog
-    }]);
+    }], component.logLevel);
 
     // when
     messagingService.publish(TEST_NAVIGATION_SELECT, selectionID);
@@ -278,13 +278,13 @@ DEBUG: Another log entry.`;
   it('clears all fields first before setting new values on update', fakeAsync(() => {
     // given
     const previousSelectionID = '42/1/2/23';
-    setMockServiceResponse(previousSelectionID, sampleData);
+    setMockServiceResponse(previousSelectionID, sampleData, component.logLevel);
     messagingService.publish(TEST_NAVIGATION_SELECT, previousSelectionID);
     tick();
     fixture.detectChanges();
 
     const newSelectionID = '42/1/2/4711';
-    setMockServiceResponse(newSelectionID, []);
+    setMockServiceResponse(newSelectionID, [], component.logLevel);
 
     // when
     messagingService.publish(TEST_NAVIGATION_SELECT, newSelectionID);
@@ -321,4 +321,36 @@ DEBUG: Another log entry.`;
       expect(component.logLevel).toEqual(case_.expectedLogLevel);
     });
   });
+
+  it('updates log when the user chooses a different log level', fakeAsync(() => {
+    // given
+    component.logLevel = LogLevel.INFO;
+    const selectionID = '42/1/2/23';
+    setMockServiceResponse(selectionID, sampleData, component.logLevel);
+    component.updateDetails(selectionID);
+    tick();
+    fixture.detectChanges();
+
+    const debugLevelButton = fixture.debugElement.query(By.css('#log-level-debug-button')).nativeElement;
+    setMockServiceResponse(selectionID, [{
+      type: DataKind.text,
+      content: 'log after changing log level'
+    }], LogLevel.DEBUG);
+    const showImages = component.showImages;
+    const properties = Object.assign({}, component.properties);
+
+    // when
+    debugLevelButton.click();
+    tick();
+    fixture.detectChanges();
+
+    // then
+    expect(component.rawLog).toEqual('log after changing log level');
+
+    expect(component.showImages).toEqual(showImages, 'undesired side-effect: "showImages" changed.');
+    expect(component.properties).toEqual(properties, 'undesired side-effect: "properties" changed.');
+
+    flush();
+  }));
+
 });

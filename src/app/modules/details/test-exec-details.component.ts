@@ -23,6 +23,8 @@ export class DefaultFileReaderProvider extends FileReaderProvider {
   }
 }
 
+type SelectableLogLevel = LogLevel.INFO | LogLevel.DEBUG | LogLevel.TRACE;
+
 @Component({
   selector: 'app-test-exec-details',
   templateUrl: './test-exec-details.component.html',
@@ -32,10 +34,11 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
   private encodedScreenshots = new Array(0);
   private imagesRemainingToLoad = 0;
   private subscription: Subscription;
+  private currentId: string;
+  private logLevel_: SelectableLogLevel = LogLevel.INFO;
 
   public properties: any = {};
   public rawLog = '';
-  public logLevel: LogLevel.INFO | LogLevel.DEBUG | LogLevel.TRACE = LogLevel.INFO;
   public showImages = false;
 
   constructor(private messagingService: MessagingService,
@@ -58,6 +61,30 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
+  get logLevel(): SelectableLogLevel {
+    return this.logLevel_;
+  }
+
+  set logLevel(logLevel: SelectableLogLevel) {
+    if (this.logLevel_ !== logLevel) {
+      const previousLogLevel = this.logLevel_;
+      this.logLevel_ = logLevel;
+      this.retrieveLog(previousLogLevel);
+    }
+  }
+
+  private async retrieveLog(previousLogLevel: SelectableLogLevel) {
+    if (this.currentId) {
+      const details = await this.detailsService.getTestExecutionDetails(this.currentId, this.logLevel_);
+      if (details) {
+        this.updateLog(details.filter((entry) => entry.type === DataKind.text).pop().content);
+      } else {
+        console.log('warning: received empty details data');
+        this.logLevel_ = previousLogLevel;
+      }
+    }
+  }
+
   // Needed to iterate the screenshots in proper order from within this component's template.
   // The screenshots are retrieved from the server asynchronously and stored in an array, so
   // the order of retrieval is not guaranteed to be the same as the original order as given
@@ -71,24 +98,20 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
   }
 
   async updateDetails(id: string): Promise<void> {
+    this.currentId = undefined;
     this.showImages = false;
     this.encodedScreenshots = new Array();
     this.properties = {};
     this.rawLog = '';
-    const details = await this.detailsService.getTestExecutionDetails(id);
+    const details = await this.detailsService.getTestExecutionDetails(id, this.logLevel_);
+    this.currentId = id;
     if (details) {
       const screenshotPaths: string[] = [];
       details.forEach((entry) => {
         switch (entry.type) {
           case DataKind.image: screenshotPaths.push(entry.content); break;
           case DataKind.properties: this.properties = this.propertiesPrettifier.prettify(entry.content); break;
-          case DataKind.text:
-            if (Array.isArray(entry.content)) {
-              this.rawLog = entry.content.join('\n');
-            } else {
-              this.rawLog = entry.content;
-            }
-            break;
+          case DataKind.text: this.updateLog(entry.content); break;
         }
       });
       this.imagesRemainingToLoad = screenshotPaths.length;
@@ -96,6 +119,10 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
     } else {
       console.log('warning: received empty details data');
     }
+  }
+
+  private updateLog(log: any) {
+    this.rawLog = Array.isArray(log) ? log.join('\n') : log;
   }
 
   private getScreenshot(path: string, index: number) {
