@@ -67,20 +67,24 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
 
   set logLevel(logLevel: SelectableLogLevel) {
     if (this.logLevel_ !== logLevel) {
-      const previousLogLevel = this.logLevel_;
       this.logLevel_ = logLevel;
-      this.retrieveLog(previousLogLevel);
+      this.retrieveLog();
     }
   }
 
-  private async retrieveLog(previousLogLevel: SelectableLogLevel) {
+  private async retrieveLog() {
     if (this.currentId) {
-      const details = await this.detailsService.getTestExecutionLog(this.currentId, this.logLevel_);
-      if (details) {
-        this.updateLog(details.filter((entry) => entry.type === DataKind.text).pop().content);
-      } else {
-        console.log('warning: received empty details data');
-        this.logLevel_ = previousLogLevel;
+      const idForRequest = this.currentId;
+      const levelForRequest = this.logLevel_;
+      try {
+        const details = await this.detailsService.getTestExecutionLog(idForRequest, levelForRequest);
+        if (details) {
+          this.updateLog(details.filter((entry) => entry.type === DataKind.text).pop().content);
+        } else {
+          console.log('warning: received empty details data');
+        }
+      } catch (error) {
+        console.error(`problem while trying to retrieve log for test step id "${idForRequest}" on level "${levelForRequest}`, error);
       }
     }
   }
@@ -98,11 +102,7 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
   }
 
   async updateDetails(id: string): Promise<void> {
-    this.currentId = undefined;
-    this.showImages = false;
-    this.encodedScreenshots = new Array();
-    this.properties = {};
-    this.rawLog = '';
+    this.clearDetails();
     const details = await this.detailsService.getTestExecutionDetails(id, this.logLevel_);
     this.currentId = id;
     if (details) {
@@ -119,6 +119,14 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
     } else {
       console.log('warning: received empty details data');
     }
+  }
+
+  private clearDetails() {
+    this.currentId = undefined;
+    this.showImages = false;
+    this.encodedScreenshots = new Array();
+    this.properties = {};
+    this.rawLog = '';
   }
 
   private updateLog(log: any) {
