@@ -24,6 +24,7 @@ export interface TestExecutionDetails {
 
 export abstract class TestExecutionDetailsService {
   abstract async getTestExecutionDetails(id: string, logLevel?: LogLevel): Promise<TestExecutionDetails[]>;
+  abstract async getTestExecutionLog(id: string, logLevel?: LogLevel): Promise<TestExecutionDetails[]>;
 }
 
 @Injectable()
@@ -32,11 +33,16 @@ export class DefaultTestExecutionDetailsService extends TestExecutionDetailsServ
   constructor(private httpProvider: HttpProviderService, private config: TestExecutionDetailsServiceConfig) { super(); }
 
   async getTestExecutionDetails(jobID: string, logLevel?: LogLevel): Promise<TestExecutionDetails[]> {
+    return await this.makeRequest(logLevel ? `${jobID}?logLevel=${logLevel}` : jobID);
+  }
+
+  async getTestExecutionLog(jobID: string, logLevel?: LogLevel): Promise<TestExecutionDetails[]> {
+    const path = `${jobID}?logOnly=true`;
+    return await this.makeRequest(logLevel ? `${path}&logLevel=${logLevel}` : path);
+  }
+
+  private async makeRequest(urlPathAndQuery: string): Promise<TestExecutionDetails[]> {
     const client = await this.httpProvider.getHttpClient();
-    let url = `${this.config.url}/${jobID}`;
-    if (logLevel) {
-      url = `${url}?logLevel=${logLevel}`;
-    }
-    return await client.get<TestExecutionDetails[]>(url).toPromise();
+    return await client.get<TestExecutionDetails[]>(`${this.config.url}/${urlPathAndQuery}`).toPromise();
   }
 }

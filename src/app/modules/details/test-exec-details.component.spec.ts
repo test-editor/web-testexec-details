@@ -113,6 +113,8 @@ describe('TestExecDetailsComponent', () => {
   function setMockServiceResponse(id: string, details: TestExecutionDetails[], logLevel: LogLevel): void {
       when(mockedTestExecDetailsService.getTestExecutionDetails(id ? id : anything(), logLevel))
       .thenReturn(Promise.resolve(details));
+      when(mockedTestExecDetailsService.getTestExecutionLog(id ? id : anything(), logLevel))
+      .thenReturn(Promise.resolve(details));
   }
 
   it('should create', () => {

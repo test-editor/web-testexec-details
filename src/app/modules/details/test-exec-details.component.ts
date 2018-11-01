@@ -75,7 +75,7 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
 
   private async retrieveLog(previousLogLevel: SelectableLogLevel) {
     if (this.currentId) {
-      const details = await this.detailsService.getTestExecutionDetails(this.currentId, this.logLevel_);
+      const details = await this.detailsService.getTestExecutionLog(this.currentId, this.logLevel_);
       if (details) {
         this.updateLog(details.filter((entry) => entry.type === DataKind.text).pop().content);
       } else {
