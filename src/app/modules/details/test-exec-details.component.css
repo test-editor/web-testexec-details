@@ -1,5 +1,6 @@
 .flex-container {
-    display: flex
+    display: flex;
+    align-items: flex-start;
 }
 
 .screenshot, #log-textarea {
@@ -28,7 +29,13 @@ tab#properties-tab {
 }
 
 #log-textarea {
-    flex-grow: 1
+    flex-grow: 1;
+    min-height: 88px;
+}
+
+.btn-group-vertical {
+    margin-top: 10px;
+    margin-right: 10px;
 }
 
 label.btn {
