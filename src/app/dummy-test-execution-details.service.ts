@@ -1,8 +1,23 @@
-import { TestExecutionDetailsService, TestExecutionDetails, DataKind } from './modules/details-service/test-execution-details.service';
-import { TestRunId } from './modules/details/test-run-id';
+import { DataKind, LogLevel, TestExecutionDetails,
+  TestExecutionDetailsService } from './modules/details-service/test-execution-details.service';
 
 export class DummyTestExecutionDetailsService extends TestExecutionDetailsService {
-    async getTestExecutionDetails(id: string): Promise<TestExecutionDetails[]> {
+  static readonly logForLevel: Map<LogLevel, string> = new Map([
+    [LogLevel.CRITICAL, 'CRITICAL message'],
+    [LogLevel.ERROR, 'CRITICAL message\nERROR message'],
+    [LogLevel.WARNING, 'CRITICAL message\nERROR message\nWARNING message'],
+    [LogLevel.INFO, 'CRITICAL message\nERROR message\nWARNING message\nINFO message'],
+    [LogLevel.DEBUG, 'CRITICAL message\nERROR message\nWARNING message\nINFO message\nDEBUG message'],
+    [LogLevel.TRACE, 'CRITICAL message\nERROR message\nWARNING message\nINFO message\nDEBUG message\nTRACE message']]);
+
+  getTestExecutionLog(id: string, logLevel = LogLevel.TRACE): Promise<TestExecutionDetails[]> {
+    return Promise.resolve([{
+        type: DataKind.text,
+        content: DummyTestExecutionDetailsService.logForLevel.get(logLevel)
+      }]);
+
+  }
+    async getTestExecutionDetails(id: string, logLevel = LogLevel.TRACE): Promise<TestExecutionDetails[]> {
         return Promise.resolve([{
           type: DataKind.properties,
           content: {
@@ -22,7 +37,7 @@ export class DummyTestExecutionDetailsService extends TestExecutionDetailsServic
           }
         }, {
             type: DataKind.text,
-            content: 'Dummy log entry'
+            content: DummyTestExecutionDetailsService.logForLevel.get(logLevel)
           }, {
             type: DataKind.image,
             content: 'http://testeditor.org/wp-content/uploads/2014/04/LogoTesteditor-e1403289032145.png'
