@@ -2,6 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpProviderService } from '../http-provider-service/http-provider.service';
 import { TestExecutionDetailsServiceConfig } from './test-execution-details-service-config';
 
+export enum LogLevel {
+  CRITICAL = 'CRITICAL',
+  ERROR = 'ERROR',
+  WARNING = 'WARNING',
+  INFO = 'INFO',
+  DEBUG = 'DEBUG',
+  TRACE = 'TRACE'
+}
+
 export enum DataKind {
   text = 'text',
   image = 'image',
@@ -14,7 +23,7 @@ export interface TestExecutionDetails {
 }
 
 export abstract class TestExecutionDetailsService {
-  abstract async getTestExecutionDetails(id: string): Promise<TestExecutionDetails[]>;
+  abstract async getTestExecutionDetails(id: string, logLevel?: LogLevel): Promise<TestExecutionDetails[]>;
 }
 
 @Injectable()
@@ -22,8 +31,12 @@ export class DefaultTestExecutionDetailsService extends TestExecutionDetailsServ
 
   constructor(private httpProvider: HttpProviderService, private config: TestExecutionDetailsServiceConfig) { super(); }
 
-  async getTestExecutionDetails(jobID: string): Promise<TestExecutionDetails[]> {
+  async getTestExecutionDetails(jobID: string, logLevel?: LogLevel): Promise<TestExecutionDetails[]> {
     const client = await this.httpProvider.getHttpClient();
-    return await client.get<TestExecutionDetails[]>(`${this.config.url}/${jobID}`).toPromise();
+    let url = `${this.config.url}/${jobID}`;
+    if (logLevel) {
+      url = `${url}?logLevel=${logLevel}`;
+    }
+    return await client.get<TestExecutionDetails[]>(url).toPromise();
   }
 }
