@@ -6,7 +6,8 @@
         <tab heading="Screenshot" id="screenshot-tab">
             <carousel [noWrap]="true" [showIndicators]="false" [interval]="0" *ngIf="showImages; else noImageFound">
                 <slide *ngFor="let i of screenshotIndices">
-                    <img class="screenshot" [id]="'screenshot-'+i" (click)="onScreenshotClick(i)" [src]="encodedScreenshots[i]" alt="screenshot" >
+                    <img class="screenshot" [id]="'screenshot-'+i" (click)="onScreenshotClick(i)" [src]="encodedScreenshots[i]"
+                        alt="screenshot">
                     <div class="carousel-caption d-none d-md-block" *ngIf="encodedScreenshots.length > 1">
                         <p class="screenshot-label" [id]="'screenshot-label-'+i">{{i+1}}/{{encodedScreenshots.length}}</p>
                     </div>
@@ -16,8 +17,15 @@
                 <p id='no-screenshot'>No screenshots available.</p>
             </ng-template>
         </tab>
-        <tab heading="Raw Log" id="log-tab">
-            <pre id="log-textarea">{{rawLog}}</pre>
+        <tab heading="Log" id="log-tab">
+            <div class="flex-container">
+                <pre id="log-textarea">{{rawLog}}</pre>
+                <div class="btn-group-vertical">
+                    <button id="log-level-info-button" class="fa two-bars btn btn-dark" [(ngModel)]="logLevel" btnRadio="INFO" tabindex="0" role="button" [disabled]="!currentId"></button>
+                    <button id="log-level-debug-button" class="fa fa-bars btn btn-dark" [(ngModel)]="logLevel" btnRadio="DEBUG" tabindex="0" role="button" [disabled]="!currentId"></button>
+                    <button id="log-level-trace-button" class="fa fa-align-justify btn btn-dark" [(ngModel)]="logLevel" btnRadio="TRACE" tabindex="0" role="button" [disabled]="!currentId"></button>
+                </div>
+            </div>
         </tab>
     </tabset>
 </div>

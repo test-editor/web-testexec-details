@@ -1,19 +1,21 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick, flush, flushMicrotasks } from '@angular/core/testing';
-
-import { TestExecDetailsComponent, FileReaderProvider, FileReaderLike } from './test-exec-details.component';
-import { PropertiesViewComponent } from '../properties/properties-view.component';
-import { TabsModule } from 'ngx-bootstrap/tabs';
-import { MessagingModule, MessagingService } from '@testeditor/messaging-service';
-import { TEST_NAVIGATION_SELECT } from '../event-types';
-import { TestExecutionDetailsService, DefaultTestExecutionDetailsService } from '../details-service/test-execution-details.service';
-import { TestExecutionDetails, DataKind } from '../details-service/test-execution-details.service';
-import { mock, instance, anything, verify, when } from 'ts-mockito';
+import { async, ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { ResourceService, DefaultResourceService } from '../resource-service/resource.service';
-import { WindowService, DefaultWindowService } from '@testeditor/testeditor-commons';
+import { MessagingModule, MessagingService } from '@testeditor/messaging-service';
+import { DefaultWindowService, WindowService } from '@testeditor/testeditor-commons';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
-import { PropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
-import { TestPropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { anything, instance, mock, verify, when } from 'ts-mockito';
+import { DataKind, DefaultTestExecutionDetailsService, LogLevel,
+  TestExecutionDetails, TestExecutionDetailsService } from '../details-service/test-execution-details.service';
+import { TEST_NAVIGATION_SELECT } from '../event-types';
+import { PropertiesViewComponent } from '../properties/properties-view.component';
+import { DefaultResourceService, ResourceService } from '../resource-service/resource.service';
+import { PropertiesPrettifierService,
+  TestPropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
+import { FileReaderLike, FileReaderProvider, TestExecDetailsComponent } from './test-exec-details.component';
+
 
 describe('TestExecDetailsComponent', () => {
   let component: TestExecDetailsComponent;
@@ -53,7 +55,7 @@ describe('TestExecDetailsComponent', () => {
       byteArrays.push(byteArray);
     }
 
-    return new Blob(byteArrays, {type: contentType});
+    return new Blob(byteArrays, { type: contentType });
   }
 
   const sampleData = [{
@@ -69,7 +71,8 @@ describe('TestExecDetailsComponent', () => {
     type: DataKind.properties,
     content: {
       'Status': 'OK'
-  }}, {
+    }
+  }, {
     type: DataKind.image,
     content: 'http://testeditor.org/wp-content/uploads/2014/04/LogoTesteditor-e1403289032145.png'
   }];
@@ -81,17 +84,17 @@ describe('TestExecDetailsComponent', () => {
       Promise.resolve(b64toBlob(mockImage, 'image/png')));
 
     TestBed.configureTestingModule({
-      declarations: [ TestExecDetailsComponent, PropertiesViewComponent ],
-      imports: [ MessagingModule.forRoot(), TabsModule.forRoot(), CarouselModule.forRoot() ],
+      declarations: [TestExecDetailsComponent, PropertiesViewComponent],
+      imports: [MessagingModule.forRoot(), TabsModule.forRoot(), CarouselModule.forRoot(), FormsModule, ButtonsModule.forRoot()],
       providers: [
-        { provide: TestExecutionDetailsService, useValue: instance(mockedTestExecDetailsService)},
-        { provide: ResourceService, useValue: instance(mockedResourceService)},
-        { provide: FileReaderProvider, useValue: mockedFileReaderProvider},
+        { provide: TestExecutionDetailsService, useValue: instance(mockedTestExecDetailsService) },
+        { provide: ResourceService, useValue: instance(mockedResourceService) },
+        { provide: FileReaderProvider, useValue: mockedFileReaderProvider },
         { provide: WindowService, useClass: DefaultWindowService },
         { provide: PropertiesPrettifierService, useClass: TestPropertiesPrettifierService },
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -107,8 +110,10 @@ describe('TestExecDetailsComponent', () => {
     fixture.detectChanges();
   });
 
-  function setMockServiceResponse(id: string, details: TestExecutionDetails[]): void {
-    when(mockedTestExecDetailsService.getTestExecutionDetails(id ? id : anything()))
+  function setMockServiceResponse(id: string, details: TestExecutionDetails[], logLevel: LogLevel): void {
+      when(mockedTestExecDetailsService.getTestExecutionDetails(id ? id : anything(), logLevel))
+      .thenReturn(Promise.resolve(details));
+      when(mockedTestExecDetailsService.getTestExecutionLog(id ? id : anything(), logLevel))
       .thenReturn(Promise.resolve(details));
   }
 
@@ -124,14 +129,14 @@ describe('TestExecDetailsComponent', () => {
     messagingService.publish(TEST_NAVIGATION_SELECT, selectionID);
 
     // then
-    verify(mockedTestExecDetailsService.getTestExecutionDetails(selectionID)).called();
+    verify(mockedTestExecDetailsService.getTestExecutionDetails(selectionID, component.logLevel)).called();
     expect().nothing();
   });
 
   it('resets details on receiving TEST_NAVIGATION_SELECT event when the payload is "null"', fakeAsync(() => {
     // given
     const selectionID = '42/1/2/23';
-    setMockServiceResponse(selectionID, null);
+    setMockServiceResponse(selectionID, null, component.logLevel);
     console.log = jasmine.createSpy('log');
 
     // when
@@ -141,7 +146,7 @@ describe('TestExecDetailsComponent', () => {
       fixture.detectChanges();
       flush();
 
-    // then
+      // then
     } catch (error) {
       fail(error);
     }
@@ -166,7 +171,8 @@ describe('TestExecDetailsComponent', () => {
       content: {
         'Execution Time': '3.14159 seconds',
         'Status': 'OK'
-      }}]);
+      }
+    }], component.logLevel);
 
     // when
     messagingService.publish(TEST_NAVIGATION_SELECT, selectionID);
@@ -189,7 +195,8 @@ describe('TestExecDetailsComponent', () => {
     const selectionID = '42/1/2/23';
     setMockServiceResponse(selectionID, [{
       type: DataKind.image,
-      content: imageURL}]);
+      content: imageURL
+    }], component.logLevel);
 
     // when
     messagingService.publish(TEST_NAVIGATION_SELECT, selectionID);
@@ -205,13 +212,14 @@ describe('TestExecDetailsComponent', () => {
   it('displays log lines in the raw log tab when retrieved details contain data of type "text"', fakeAsync(() => {
     // given
     const sampleLog =
-    `INFO: This is a log entry!
+      `INFO: This is a log entry!
 DEBUG: Another log entry.`;
 
     const selectionID = '42/1/2/23';
     setMockServiceResponse(selectionID, [{
       type: DataKind.text,
-      content: sampleLog}]);
+      content: sampleLog
+    }], component.logLevel);
 
     // when
     messagingService.publish(TEST_NAVIGATION_SELECT, selectionID);
@@ -226,7 +234,7 @@ DEBUG: Another log entry.`;
   it('fills all tabs with retrieved details data', fakeAsync(() => {
     // given
     const selectionID = '42/1/2/23';
-    setMockServiceResponse(selectionID, sampleData);
+    setMockServiceResponse(selectionID, sampleData, component.logLevel);
 
     // when
     messagingService.publish(TEST_NAVIGATION_SELECT, selectionID);
@@ -248,12 +256,13 @@ DEBUG: Another log entry.`;
   it('escapes text inserted into the DOM', fakeAsync(() => {
     // given
     const sampleLog =
-    `log entry</textarea><div id="BAD"><p>NOT ALLOWED</p></div>`;
+      `log entry</textarea><div id="BAD"><p>NOT ALLOWED</p></div>`;
 
     const selectionID = '42/1/2/23';
     setMockServiceResponse(selectionID, [{
       type: DataKind.text,
-      content: sampleLog}]);
+      content: sampleLog
+    }], component.logLevel);
 
     // when
     messagingService.publish(TEST_NAVIGATION_SELECT, selectionID);
@@ -271,13 +280,13 @@ DEBUG: Another log entry.`;
   it('clears all fields first before setting new values on update', fakeAsync(() => {
     // given
     const previousSelectionID = '42/1/2/23';
-    setMockServiceResponse(previousSelectionID, sampleData);
+    setMockServiceResponse(previousSelectionID, sampleData, component.logLevel);
     messagingService.publish(TEST_NAVIGATION_SELECT, previousSelectionID);
     tick();
     fixture.detectChanges();
 
     const newSelectionID = '42/1/2/4711';
-    setMockServiceResponse(newSelectionID, []);
+    setMockServiceResponse(newSelectionID, [], component.logLevel);
 
     // when
     messagingService.publish(TEST_NAVIGATION_SELECT, newSelectionID);
@@ -293,6 +302,60 @@ DEBUG: Another log entry.`;
 
     const definitionList = fixture.debugElement.query(By.css('dl'));
     expect(definitionList).toBeFalsy();
+
+    flush();
+  }));
+
+  [
+    { id: 'log-level-info-button', expectedLogLevel: LogLevel.INFO },
+    { id: 'log-level-debug-button', expectedLogLevel: LogLevel.DEBUG },
+    { id: 'log-level-trace-button', expectedLogLevel: LogLevel.TRACE }
+  ].forEach((case_) => {
+    it(`changes logLevel to ${case_.expectedLogLevel} when button "${case_.id}" was pressed`, fakeAsync(() => {
+      // given
+      const button = fixture.debugElement.query(By.css(`#${case_.id}`)).nativeElement;
+      const selectionID = '42/1/2/23';
+      setMockServiceResponse(selectionID, sampleData, component.logLevel);
+      component.updateDetails(selectionID);
+      tick();
+      fixture.detectChanges();
+      component.logLevel = null;
+
+      // when
+      button.click();
+
+      // then
+      expect(component.logLevel).toEqual(case_.expectedLogLevel);
+    }));
+  });
+
+  it('updates log when the user chooses a different log level', fakeAsync(() => {
+    // given
+    component.logLevel = LogLevel.INFO;
+    const selectionID = '42/1/2/23';
+    setMockServiceResponse(selectionID, sampleData, component.logLevel);
+    component.updateDetails(selectionID);
+    tick();
+    fixture.detectChanges();
+
+    const debugLevelButton = fixture.debugElement.query(By.css('#log-level-debug-button')).nativeElement;
+    setMockServiceResponse(selectionID, [{
+      type: DataKind.text,
+      content: 'log after changing log level'
+    }], LogLevel.DEBUG);
+    const showImages = component.showImages;
+    const properties = Object.assign({}, component.properties);
+
+    // when
+    debugLevelButton.click();
+    tick();
+    fixture.detectChanges();
+
+    // then
+    expect(component.rawLog).toEqual('log after changing log level');
+
+    expect(component.showImages).toEqual(showImages, 'undesired side-effect: "showImages" changed.');
+    expect(component.properties).toEqual(properties, 'undesired side-effect: "properties" changed.');
 
     flush();
   }));

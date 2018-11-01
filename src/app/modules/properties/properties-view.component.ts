@@ -32,7 +32,7 @@ export class PropertiesViewComponent implements OnInit {
     }
   }
 
-  private isModelValid(): boolean {
+  public isModelValid(): boolean {
     return this.model === Object(this.model) && !Array.isArray(this.model) && typeof this.model !== 'function';
   }
 }
