@@ -21,9 +21,9 @@
             <div class="flex-container">
                 <pre id="log-textarea">{{rawLog}}</pre>
                 <div class="btn-group-vertical">
-                    <label id="log-level-info-button" class="fa two-bars btn btn-dark" [(ngModel)]="logLevel" btnRadio="INFO" tabindex="0" role="button"></label>
-                    <label id="log-level-debug-button" class="fa fa-bars btn btn-dark" [(ngModel)]="logLevel" btnRadio="DEBUG" tabindex="0" role="button"></label>
-                    <label id="log-level-trace-button" class="fa fa-align-justify btn btn-dark" [(ngModel)]="logLevel" btnRadio="TRACE" tabindex="0" role="button"></label>
+                    <button id="log-level-info-button" class="fa two-bars btn btn-dark" [(ngModel)]="logLevel" btnRadio="INFO" tabindex="0" role="button" [disabled]="!currentId"></button>
+                    <button id="log-level-debug-button" class="fa fa-bars btn btn-dark" [(ngModel)]="logLevel" btnRadio="DEBUG" tabindex="0" role="button" [disabled]="!currentId"></button>
+                    <button id="log-level-trace-button" class="fa fa-align-justify btn btn-dark" [(ngModel)]="logLevel" btnRadio="TRACE" tabindex="0" role="button" [disabled]="!currentId"></button>
                 </div>
             </div>
         </tab>

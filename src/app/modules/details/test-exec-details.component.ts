@@ -34,7 +34,7 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
   private encodedScreenshots = new Array(0);
   private imagesRemainingToLoad = 0;
   private subscription: Subscription;
-  private currentId: string;
+  private currentId_: string;
   private logLevel_: SelectableLogLevel = LogLevel.INFO;
 
   public properties: any = {};
@@ -72,9 +72,13 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
+  get currentId() {
+    return this.currentId_;
+  }
+
   private async retrieveLog() {
-    if (this.currentId) {
-      const idForRequest = this.currentId;
+    if (this.currentId_) {
+      const idForRequest = this.currentId_;
       const levelForRequest = this.logLevel_;
       try {
         const details = await this.detailsService.getTestExecutionLog(idForRequest, levelForRequest);
@@ -104,7 +108,7 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
   async updateDetails(id: string): Promise<void> {
     this.clearDetails();
     const details = await this.detailsService.getTestExecutionDetails(id, this.logLevel_);
-    this.currentId = id;
+    this.currentId_ = id;
     if (details) {
       const screenshotPaths: string[] = [];
       details.forEach((entry) => {
@@ -122,7 +126,7 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
   }
 
   private clearDetails() {
-    this.currentId = undefined;
+    this.currentId_ = undefined;
     this.showImages = false;
     this.encodedScreenshots = new Array();
     this.properties = {};

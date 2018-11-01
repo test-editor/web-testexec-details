@@ -311,9 +311,14 @@ DEBUG: Another log entry.`;
     { id: 'log-level-debug-button', expectedLogLevel: LogLevel.DEBUG },
     { id: 'log-level-trace-button', expectedLogLevel: LogLevel.TRACE }
   ].forEach((case_) => {
-    it(`changes logLevel to ${case_.expectedLogLevel} when button "${case_.id}" was pressed`, () => {
+    it(`changes logLevel to ${case_.expectedLogLevel} when button "${case_.id}" was pressed`, fakeAsync(() => {
       // given
       const button = fixture.debugElement.query(By.css(`#${case_.id}`)).nativeElement;
+      const selectionID = '42/1/2/23';
+      setMockServiceResponse(selectionID, sampleData, component.logLevel);
+      component.updateDetails(selectionID);
+      tick();
+      fixture.detectChanges();
       component.logLevel = null;
 
       // when
@@ -321,7 +326,7 @@ DEBUG: Another log entry.`;
 
       // then
       expect(component.logLevel).toEqual(case_.expectedLogLevel);
-    });
+    }));
   });
 
   it('updates log when the user chooses a different log level', fakeAsync(() => {
