@@ -23,7 +23,7 @@ export class DefaultFileReaderProvider extends FileReaderProvider {
   }
 }
 
-type SelectableLogLevel = LogLevel.INFO | LogLevel.DEBUG | LogLevel.TRACE;
+export type SelectableLogLevel = LogLevel.INFO | LogLevel.DEBUG | LogLevel.TRACE;
 
 @Component({
   selector: 'app-test-exec-details',
