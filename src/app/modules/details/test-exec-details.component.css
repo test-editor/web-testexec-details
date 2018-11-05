@@ -1,6 +1,7 @@
 .flex-container {
     display: flex;
     align-items: flex-start;
+    height: inherit
 }
 
 .screenshot, #log-textarea {
