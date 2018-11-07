@@ -12,6 +12,6 @@ export class AppComponent implements AfterViewInit {
   constructor(private messagingService: MessagingService) {}
 
   ngAfterViewInit(): void {
-    this.messagingService.publish(TEST_NAVIGATION_SELECT, {});
+    this.messagingService.publish(TEST_NAVIGATION_SELECT, '');
   }
 }
