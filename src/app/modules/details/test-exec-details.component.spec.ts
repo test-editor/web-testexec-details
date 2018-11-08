@@ -348,8 +348,8 @@ DEBUG: Another log entry.`;
     // then
     const rawLogLines = component.rawLog.split('\n');
 
-    expect(rawLogLines[0]).not.toEqual(sampleLogLines[0]);
-    expect(rawLogLines[1]).not.toEqual(sampleLogLines[1]);
+    expect(rawLogLines[0]).toEqual('    12:58:18 INFO      AComponent');
+    expect(rawLogLines[1]).toEqual('    12:58:18 INFO        with @ = "org/testeditor/Minimal.tcl:10-19"');
     expect(rawLogLines.find((line) => line.indexOf('DefaultLoggingListener') >= 0)).toBeFalsy();
     expect(rawLogLines[2]).toEqual(sampleLogLines[2]);
   });
