@@ -52,7 +52,7 @@ describe('TestExecutionDetailsService', () => {
     const id = '42/1/2/23';
     const testExecutionRequest = {
       method: 'GET',
-      url: serviceConfig.url + '/42/1/2/23'
+      url: serviceConfig.url + '/details/42/1/2/23'
     };
     const mockResponse: TestExecutionDetails[] = [{ type: DataKind.text, content: ['Hello World!', 'This can contain multiple lines.'] }];
 
@@ -73,7 +73,7 @@ describe('TestExecutionDetailsService', () => {
     const id = '42/1/2/23';
     const testExecutionRequest = {
       method: 'GET',
-      url: serviceConfig.url + '/42/1/2/23?logLevel=INFO'
+      url: serviceConfig.url + '/details/42/1/2/23?logLevel=INFO'
     };
     const mockResponse: TestExecutionDetails[] = [{ type: DataKind.text, content: ['Hello World!', 'This can contain multiple lines.'] }];
 

@@ -43,6 +43,6 @@ export class DefaultTestExecutionDetailsService extends TestExecutionDetailsServ
 
   private async makeRequest(urlPathAndQuery: string): Promise<TestExecutionDetails[]> {
     const client = await this.httpProvider.getHttpClient();
-    return await client.get<TestExecutionDetails[]>(`${this.config.url}/${urlPathAndQuery}`).toPromise();
+    return await client.get<TestExecutionDetails[]>(`${this.config.url}/details/${urlPathAndQuery}`).toPromise();
   }
 }
