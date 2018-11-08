@@ -329,6 +329,31 @@ DEBUG: Another log entry.`;
     }));
   });
 
+  it('filters noise from info log messages', async () => {
+    // given
+    const selectionID = '42/1/2/23';
+    const sampleLogLines = [
+      '    12:58:18 INFO  [Test worker]  [TE-Test: Minimal] DefaultLoggingListener     AComponent',
+      '    12:58:18 INFO  [Test worker]  [TE-Test: Minimal] DefaultLoggingListener       with @ = "org/testeditor/Minimal.tcl:10-19"',
+      '    12:58:18 DEBUG [Test worker]  [TE-Test: Minimal] HftFixture locateElementWithoutStragety(anid)'
+    ];
+    setMockServiceResponse(selectionID, [{
+      type: DataKind.text,
+      content: sampleLogLines,
+    }], component.logLevel);
+
+    // when
+    await component.updateDetails(selectionID);
+
+    // then
+    const rawLogLines = component.rawLog.split('\n');
+
+    expect(rawLogLines[0]).not.toEqual(sampleLogLines[0]);
+    expect(rawLogLines[1]).not.toEqual(sampleLogLines[1]);
+    expect(rawLogLines.find((line) => line.indexOf('DefaultLoggingListener') >= 0)).toBeFalsy();
+    expect(rawLogLines[2]).toEqual(sampleLogLines[2]);
+  });
+
   it('updates log when the user chooses a different log level', fakeAsync(() => {
     // given
     component.logLevel = LogLevel.INFO;

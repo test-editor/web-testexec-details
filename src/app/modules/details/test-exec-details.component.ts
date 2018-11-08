@@ -147,7 +147,17 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
   }
 
   private updateLog(log: any) {
-    this.rawLog = Array.isArray(log) ? log.join('\n') : log;
+    if (!Array.isArray(log)) {
+      this.rawLog = log;
+    } else {
+      if (this.logLevel === LogLevel.INFO) {
+        this.rawLog = log.map(
+          (line: string) => line.replace(new RegExp('(\\[[^\\]]+\\] +)+DefaultLoggingListener '), '')
+        ).join('\n');
+      } else {
+        this.rawLog = log.join('\n');
+      }
+    }
   }
 
   private getScreenshot(path: string, index: number) {
