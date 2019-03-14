@@ -15,6 +15,7 @@ import { PropertiesPrettifierService,
   TestPropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
 import { DefaultFileReaderProvider, FileReaderProvider, TestExecDetailsComponent } from './test-exec-details.component';
 import { TestPropertiesOrganizerService, PropertiesOrganizerService } from '../test-properties-organizer/test-properties-organizer.service';
+import { TestPropertiesOrganizerServiceConfig } from '../test-properties-organizer/test-properties-organizer-service-config';
 
 @NgModule({
   imports: [
@@ -38,11 +39,13 @@ import { TestPropertiesOrganizerService, PropertiesOrganizerService } from '../t
 })
 export class TestExecDetailsModule {
   static forRoot(detailsServiceConfig: TestExecutionDetailsServiceConfig,
-    resourceServiceConfig: ResourceServiceConfig): ModuleWithProviders {
+    resourceServiceConfig: ResourceServiceConfig,
+    propertiesOrganizerServiceConfig?: TestPropertiesOrganizerServiceConfig): ModuleWithProviders {
     return {
       ngModule: TestExecDetailsModule,
       providers: [ { provide: TestExecutionDetailsServiceConfig, useValue: detailsServiceConfig },
-                   { provide: ResourceServiceConfig, useValue: resourceServiceConfig } ]
+                   { provide: ResourceServiceConfig, useValue: resourceServiceConfig },
+                   { provide: TestPropertiesOrganizerServiceConfig, useValue: propertiesOrganizerServiceConfig} ]
     };
   }
 }
