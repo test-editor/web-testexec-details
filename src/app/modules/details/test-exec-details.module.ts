@@ -14,6 +14,7 @@ import { DefaultResourceService, ResourceService } from '../resource-service/res
 import { PropertiesPrettifierService,
   TestPropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
 import { DefaultFileReaderProvider, FileReaderProvider, TestExecDetailsComponent } from './test-exec-details.component';
+import { TestPropertiesOrganizerService, PropertiesOrganizerService } from '../test-properties-organizer/test-properties-organizer.service';
 
 @NgModule({
   imports: [
@@ -31,7 +32,8 @@ import { DefaultFileReaderProvider, FileReaderProvider, TestExecDetailsComponent
     {provide: ResourceService, useClass: DefaultResourceService},
     { provide: FileReaderProvider, useClass: DefaultFileReaderProvider },
     { provide: WindowService, useClass: DefaultWindowService },
-    { provide: PropertiesPrettifierService, useClass: TestPropertiesPrettifierService }
+    { provide: PropertiesPrettifierService, useClass: TestPropertiesPrettifierService },
+    { provide: PropertiesOrganizerService, useClass: TestPropertiesOrganizerService }
   ]
 })
 export class TestExecDetailsModule {
