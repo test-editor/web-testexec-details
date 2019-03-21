@@ -6,7 +6,7 @@ import { TestExecutionDetailsServiceConfig } from './test-execution-details-serv
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { MessagingModule, MessagingService } from '@testeditor/messaging-service';
-import { HttpProviderService } from '../http-provider-service/http-provider.service';
+import { HttpProviderService } from '@testeditor/testeditor-commons';
 import { PropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
 import { TestPropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
 

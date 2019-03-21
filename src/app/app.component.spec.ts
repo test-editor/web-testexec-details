@@ -11,7 +11,7 @@ import { AppComponent } from './app.component';
 import { TestExecutionDetailsServiceConfig } from './modules/details-service/test-execution-details-service-config';
 import { DefaultTestExecutionDetailsService, TestExecutionDetailsService } from './modules/details-service/test-execution-details.service';
 import { DefaultFileReaderProvider, FileReaderProvider, TestExecDetailsComponent } from './modules/details/test-exec-details.component';
-import { HttpProviderService } from './modules/http-provider-service/http-provider.service';
+import { HttpProviderService } from '@testeditor/testeditor-commons';
 import { PropertiesViewComponent } from './modules/properties/properties-view.component';
 import { DefaultResourceService, ResourceService } from './modules/resource-service/resource.service';
 import { PropertiesPrettifierService,
