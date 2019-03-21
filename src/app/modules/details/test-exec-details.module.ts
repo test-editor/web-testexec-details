@@ -7,7 +7,7 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TestExecutionDetailsServiceConfig } from '../details-service/test-execution-details-service-config';
 import { DefaultTestExecutionDetailsService, TestExecutionDetailsService } from '../details-service/test-execution-details.service';
-import { HttpProviderService } from '../http-provider-service/http-provider.service';
+import { HttpProviderService } from '@testeditor/testeditor-commons';
 import { PropertiesViewModule } from '../properties/properties-view.module';
 import { ResourceServiceConfig } from '../resource-service/resource-service-config';
 import { DefaultResourceService, ResourceService } from '../resource-service/resource.service';

@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MessagingService } from '@testeditor/messaging-service';
 import { WindowService } from '@testeditor/testeditor-commons';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { DataKind, LogLevel, TestExecutionDetailsService } from '../details-service/test-execution-details.service';
 import { TEST_NAVIGATION_SELECT, TEST_EXECUTION_TREE_LOADED } from '../event-types';
 import { ResourceService } from '../resource-service/resource.service';
 import { PropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
 
 export interface FileReaderLike {
-  onload: ((this: FileReaderLike | FileReader, ev?: FileReaderProgressEvent) => any) | null;
+  onload: ((this: FileReaderLike | FileReader, ev?: ProgressEvent) => any) | null;
   result: any;
   readAsDataURL(blob: Blob): void;
 }
@@ -31,12 +31,12 @@ export type SelectableLogLevel = LogLevel.INFO | LogLevel.DEBUG | LogLevel.TRACE
   styleUrls: ['./test-exec-details.component.css']
 })
 export class TestExecDetailsComponent implements OnInit, OnDestroy {
-  private encodedScreenshots = new Array(0);
   private imagesRemainingToLoad = 0;
   private subscription: Subscription;
   private currentId_: string;
   private logLevel_: SelectableLogLevel = LogLevel.INFO;
 
+  public encodedScreenshots = new Array(0);
   public properties: any = {};
   public rawLog = '';
   public showImages = false;
