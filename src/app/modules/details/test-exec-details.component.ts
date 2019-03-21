@@ -31,12 +31,12 @@ export type SelectableLogLevel = LogLevel.INFO | LogLevel.DEBUG | LogLevel.TRACE
   styleUrls: ['./test-exec-details.component.css']
 })
 export class TestExecDetailsComponent implements OnInit, OnDestroy {
-  private encodedScreenshots = new Array(0);
   private imagesRemainingToLoad = 0;
   private subscription: Subscription;
   private currentId_: string;
   private logLevel_: SelectableLogLevel = LogLevel.INFO;
 
+  public encodedScreenshots = new Array(0);
   public properties: any = {};
   public rawLog = '';
   public showImages = false;

@@ -14,7 +14,7 @@ export class PropertiesViewComponent implements OnInit {
   ngOnInit() {
   }
 
-  private propertyValue = (propertyName: string) => {
+  propertyValue = (propertyName: string) => {
     let result = this.model[propertyName];
     const type = this.typeOf(result);
     if (type === typeof {} || type === 'array') {
@@ -22,9 +22,10 @@ export class PropertiesViewComponent implements OnInit {
     }
     return result;
   }
-  private typeOf = (element: any) => Array.isArray(element) ? 'array' : typeof element;
 
-  private propertyNames(): string[] {
+  typeOf = (element: any) => Array.isArray(element) ? 'array' : typeof element;
+
+  propertyNames(): string[] {
     if (this.isModelValid()) {
       return Object.keys(this.model);
     } else {
