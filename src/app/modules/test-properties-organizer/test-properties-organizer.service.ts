@@ -7,6 +7,15 @@ export abstract class PropertiesOrganizerService {
 
 type BucketList = Record<number, string[]>;
 
+/**
+ * Bucket-sorts an array of property names based on the configured priorities.
+ * 
+ * The config may contain a map that assigns numeric values to known property names.
+ * Property names with a higher numeric value are put to the top of the list, those
+ * with lower values are moved down. Negative values are allowed. Property names
+ * that are not explicitly assigned a value are implicitly assigned a value of '0'.
+ * Property names in the same bucket are sorted alphabetically (ASCII-order).
+ */
 @Injectable()
 export class TestPropertiesOrganizerService implements PropertiesOrganizerService {
 
