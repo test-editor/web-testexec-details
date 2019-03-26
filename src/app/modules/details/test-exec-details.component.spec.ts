@@ -7,11 +7,13 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { anything, instance, mock, verify, when } from 'ts-mockito';
-import { DataKind, DefaultTestExecutionDetailsService, LogLevel,
-  TestExecutionDetails, TestExecutionDetailsService } from '../details-service/test-execution-details.service';
+import { DataKind, DefaultTestExecutionDetailsService, LogLevel, TestExecutionDetails,
+  TestExecutionDetailsService } from '../details-service/test-execution-details.service';
 import { TEST_NAVIGATION_SELECT } from '../event-types';
 import { PropertiesViewComponent } from '../properties/properties-view.component';
 import { DefaultResourceService, ResourceService } from '../resource-service/resource.service';
+import { TestPropertiesOrganizerServiceConfig } from '../test-properties-organizer/test-properties-organizer-service-config';
+import { PropertiesOrganizerService, TestPropertiesOrganizerService } from '../test-properties-organizer/test-properties-organizer.service';
 import { PropertiesPrettifierService,
   TestPropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
 import { FileReaderLike, FileReaderProvider, TestExecDetailsComponent } from './test-exec-details.component';
@@ -92,6 +94,8 @@ describe('TestExecDetailsComponent', () => {
         { provide: FileReaderProvider, useValue: mockedFileReaderProvider },
         { provide: WindowService, useClass: DefaultWindowService },
         { provide: PropertiesPrettifierService, useClass: TestPropertiesPrettifierService },
+        { provide: PropertiesOrganizerService, useClass: TestPropertiesOrganizerService },
+        { provide: TestPropertiesOrganizerServiceConfig, useValue: { propertyPriorityMap: {} } }
       ]
     })
       .compileComponents();

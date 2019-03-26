@@ -2,7 +2,7 @@ import { async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { MessagingModule } from '@testeditor/messaging-service';
-import { DefaultWindowService, WindowService } from '@testeditor/testeditor-commons';
+import { DefaultWindowService, HttpProviderService, WindowService } from '@testeditor/testeditor-commons';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -11,11 +11,13 @@ import { AppComponent } from './app.component';
 import { TestExecutionDetailsServiceConfig } from './modules/details-service/test-execution-details-service-config';
 import { DefaultTestExecutionDetailsService, TestExecutionDetailsService } from './modules/details-service/test-execution-details.service';
 import { DefaultFileReaderProvider, FileReaderProvider, TestExecDetailsComponent } from './modules/details/test-exec-details.component';
-import { HttpProviderService } from '@testeditor/testeditor-commons';
 import { PropertiesViewComponent } from './modules/properties/properties-view.component';
 import { DefaultResourceService, ResourceService } from './modules/resource-service/resource.service';
+import { PropertiesOrganizerService,
+  TestPropertiesOrganizerService } from './modules/test-properties-organizer/test-properties-organizer.service';
 import { PropertiesPrettifierService,
   TestPropertiesPrettifierService } from './modules/test-properties-prettifier/test-properties-prettifier.service';
+import { TestPropertiesOrganizerServiceConfig } from './modules/test-properties-organizer/test-properties-organizer-service-config';
 
 describe('AppComponent', () => {
   const mockedResourceService = mock(DefaultResourceService);
@@ -34,6 +36,8 @@ describe('AppComponent', () => {
         { provide: FileReaderProvider, useClass: DefaultFileReaderProvider},
         { provide: WindowService, useClass: DefaultWindowService },
         { provide: PropertiesPrettifierService, useClass: TestPropertiesPrettifierService },
+        { provide: PropertiesOrganizerService, useClass: TestPropertiesOrganizerService },
+        { provide: TestPropertiesOrganizerServiceConfig, useValue: { propertyPriorityMap: {} } },
         HttpProviderService,
         TestExecutionDetailsServiceConfig
       ]
