@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { TestPropertiesOrganizerServiceConfig } from './test-properties-organizer-service-config';
 
 export abstract class PropertiesOrganizerService {
-  abstract organize(propertyNames: string[]): string[];
+  abstract organize(unorganized: object): object;
 }
 
 type BucketList = Record<number, string[]>;
@@ -21,7 +21,15 @@ export class TestPropertiesOrganizerService implements PropertiesOrganizerServic
 
   constructor(private config: TestPropertiesOrganizerServiceConfig) { }
 
-  organize(propertyNames: string[]): string[] {
+  organize(unorganized: object): object {
+    const organized: object = {};
+    this.organizeNames(Object.keys(unorganized)).forEach(name => {
+      organized[name] = unorganized[name];
+    });
+    return organized;
+  }
+
+  organizeNames(propertyNames: string[]): string[] {
     const result: string[] = [];
     const bucketLists = this.bucketsFrom(propertyNames);
     this.bucketsByPriority().forEach((index) => result.push(...(bucketLists[index].sort())));
