@@ -3,8 +3,9 @@ import { MessagingService } from '@testeditor/messaging-service';
 import { WindowService } from '@testeditor/testeditor-commons';
 import { Subscription } from 'rxjs';
 import { DataKind, LogLevel, TestExecutionDetailsService } from '../details-service/test-execution-details.service';
-import { TEST_NAVIGATION_SELECT, TEST_EXECUTION_TREE_LOADED } from '../event-types';
+import { TEST_EXECUTION_TREE_LOADED, TEST_NAVIGATION_SELECT } from '../event-types';
 import { ResourceService } from '../resource-service/resource.service';
+import { PropertiesOrganizerService } from '../test-properties-organizer/test-properties-organizer.service';
 import { PropertiesPrettifierService } from '../test-properties-prettifier/test-properties-prettifier.service';
 
 export interface FileReaderLike {
@@ -46,7 +47,8 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
     private resourceService: ResourceService,
     private fileReaderProvider: FileReaderProvider,
     private windowReference: WindowService,
-    private propertiesPrettifier: PropertiesPrettifierService<object>) { }
+    private propertiesPrettifier: PropertiesPrettifierService<object>,
+    private propertiesOrganizer: PropertiesOrganizerService) { }
 
   ngOnInit() {
     this.subscription = this.messagingService.subscribe(TEST_NAVIGATION_SELECT, (id) => this.updateDetails(id));
@@ -126,7 +128,10 @@ export class TestExecDetailsComponent implements OnInit, OnDestroy {
         details.forEach((entry) => {
           switch (entry.type) {
             case DataKind.image: screenshotPaths.push(entry.content); break;
-            case DataKind.properties: this.properties = this.propertiesPrettifier.prettify(entry.content); break;
+            case DataKind.properties: this.properties =
+              this.propertiesOrganizer.organize(
+                this.propertiesPrettifier.prettify(entry.content)
+              ); break;
             case DataKind.text: this.updateLog(entry.content); break;
           }
         });
