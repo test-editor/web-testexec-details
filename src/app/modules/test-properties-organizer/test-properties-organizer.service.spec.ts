@@ -76,7 +76,7 @@ describe('TestPropertiesOrganizerService', () => {
         expect(actual).not.toBe(unsortedObject);
   }));
 
-  fit('should ignore prioritized properties that are not present in the unsorted object',
+  it('should ignore prioritized properties that are not present in the unsorted object',
    inject([TestPropertiesOrganizerService, TestPropertiesOrganizerServiceConfig],
       (service: TestPropertiesOrganizerService, config: TestPropertiesOrganizerServiceConfig) => {
     // given
