@@ -37,7 +37,8 @@ export class TestPropertiesOrganizerService implements PropertiesOrganizerServic
   }
 
   bucketsFrom(propertyNames: string[]): BucketList {
-    const result: BucketList = {};
+    const result = this.createBucketList();
+
     propertyNames.forEach((name) => {
       const bucket = this.bucketOf(name);
       if (result[bucket]) {
@@ -46,6 +47,12 @@ export class TestPropertiesOrganizerService implements PropertiesOrganizerServic
         result[bucket] = [name];
       }
     });
+    return result;
+  }
+
+  createBucketList(): BucketList {
+    const result: BucketList = {};
+    Object.values(this.config.propertyPriorityMap).forEach((priority) => result[priority] = []);
     return result;
   }
 

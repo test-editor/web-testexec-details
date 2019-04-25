@@ -74,5 +74,27 @@ describe('TestPropertiesOrganizerService', () => {
         expect(Object.keys(actual)).toEqual(sorted);
         expect(actual).toEqual(unsortedObject);
         expect(actual).not.toBe(unsortedObject);
-      }));
+  }));
+
+  fit('should ignore prioritized properties that are not present in the unsorted object',
+   inject([TestPropertiesOrganizerService, TestPropertiesOrganizerServiceConfig],
+      (service: TestPropertiesOrganizerService, config: TestPropertiesOrganizerServiceConfig) => {
+    // given
+    config.propertyPriorityMap['nonExistingProperty'] = 100;
+    config.propertyPriorityMap['omega'] = 200;
+    const unsortedObject = {
+      'zeta': 'z', 'gamma': 'g', 'alpha': 'a',
+      'omega': '42', 'lambda': {}, 'beta': null,
+      'delta': 'values shouldn\'t matter', 'epsilon': []
+    };
+    const sorted = ['omega', 'alpha', 'beta', 'delta', 'epsilon', 'gamma', 'lambda', 'zeta'];
+
+    // when
+    const actual = service.organize(unsortedObject);
+
+    // then
+    expect(Object.keys(actual)).toEqual(sorted);
+    expect(actual).toEqual(unsortedObject);
+    expect(actual).not.toBe(unsortedObject);
+  }));
 });
